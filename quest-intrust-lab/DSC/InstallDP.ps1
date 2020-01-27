@@ -22,7 +22,7 @@ $MachineName = $DPMPName + "." + $DomainFullName
 $initParams = @{}
 Set-Location "$($SiteCode):\" @initParams
 
-$SystemServer = Get-CMSiteSystemServer -SiteSystemServerName $MachineName
+#$SystemServer = Get-CMSiteSystemServer -SiteSystemServerName $MachineName
 if(!$SystemServer)
 {
     "[$(Get-Date -format "MM/dd/yyyy HH:mm:ss")] Creating cm site system server..." | Out-File -Append $logpath
@@ -34,25 +34,25 @@ if(!$SystemServer)
 if((get-cmdistributionpoint -SiteSystemServerName $MachineName).count -ne 1)
 {
     #Install DP
-    "[$(Get-Date -format "MM/dd/yyyy HH:mm:ss")] Adding distribution point on $MachineName ..." | Out-File -Append $logpath
-    Add-CMDistributionPoint -InputObject $SystemServer -CertificateExpirationTimeUtc $Date | Out-File -Append $logpath
-    "[$(Get-Date -format "MM/dd/yyyy HH:mm:ss")] Finished adding distribution point on $MachineName ..." | Out-File -Append $logpath
+#    "[$(Get-Date -format "MM/dd/yyyy HH:mm:ss")] Adding distribution point on $MachineName ..." | Out-File -Append $logpath
+#    Add-CMDistributionPoint -InputObject $SystemServer -CertificateExpirationTimeUtc $Date | Out-File -Append $logpath
+#    "[$(Get-Date -format "MM/dd/yyyy HH:mm:ss")] Finished adding distribution point on $MachineName ..." | Out-File -Append $logpath
 
 
-    if((get-cmdistributionpoint -SiteSystemServerName $MachineName).count -eq 1)
-    {
+ #   if((get-cmdistributionpoint -SiteSystemServerName $MachineName).count -eq 1)
+ #   {
         "[$(Get-Date -format "MM/dd/yyyy HH:mm:ss")] Finished running the script." | Out-File -Append $logpath
         $Configuration.InstallDP.Status = 'Completed'
         $Configuration.InstallDP.EndTime = Get-Date -format "yyyy-MM-dd HH:mm:ss"
         $Configuration | ConvertTo-Json | Out-File -FilePath $ConfigurationFile -Force
-    }
-    else
-    {
-        "[$(Get-Date -format "MM/dd/yyyy HH:mm:ss")] Failed to run the script." | Out-File -Append $logpath
-        $Configuration.InstallDP.Status = 'Failed'
-        $Configuration.InstallDP.EndTime = Get-Date -format "yyyy-MM-dd HH:mm:ss"
-        $Configuration | ConvertTo-Json | Out-File -FilePath $ConfigurationFile -Force
-    }
+ #   }
+ #   else
+ #   {
+ #       "[$(Get-Date -format "MM/dd/yyyy HH:mm:ss")] Failed to run the script." | Out-File -Append $logpath
+ #       $Configuration.InstallDP.Status = 'Failed'
+ #       $Configuration.InstallDP.EndTime = Get-Date -format "yyyy-MM-dd HH:mm:ss"
+ #       $Configuration | ConvertTo-Json | Out-File -FilePath $ConfigurationFile -Force
+ #   }
 }
 else
 {

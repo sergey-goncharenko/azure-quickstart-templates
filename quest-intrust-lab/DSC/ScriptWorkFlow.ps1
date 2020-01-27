@@ -47,9 +47,9 @@ else
 }
 
 #Install CM and Config
-$ScriptFile = Join-Path -Path $ProvisionToolPath -ChildPath "InstallAndUpdateSCCM.ps1"
+#$ScriptFile = Join-Path -Path $ProvisionToolPath -ChildPath "InstallAndUpdateSCCM.ps1"
 
-. $ScriptFile $DomainFullName $CM $CMUser $Role $ProvisionToolPath
+#. $ScriptFile $DomainFullName $CM $CMUser $Role $ProvisionToolPath
 
 #Install DP
 $ScriptFile = Join-Path -Path $ProvisionToolPath -ChildPath "InstallDP.ps1"
@@ -57,11 +57,11 @@ $ScriptFile = Join-Path -Path $ProvisionToolPath -ChildPath "InstallDP.ps1"
 . $ScriptFile $DomainFullName $INTRName $Role $ProvisionToolPath
 
 #Install MP
-$ScriptFile = Join-Path -Path $ProvisionToolPath -ChildPath "InstallMP.ps1"
+#$ScriptFile = Join-Path -Path $ProvisionToolPath -ChildPath "InstallMP.ps1"
 
-. $ScriptFile $DomainFullName $INTRName $Role $ProvisionToolPath
+#. $ScriptFile $DomainFullName $INTRName $Role $ProvisionToolPath
 
 #Install Client
-$ScriptFile = Join-Path -Path $ProvisionToolPath -ChildPath "InstallClient.ps1"
+#$ScriptFile = Join-Path -Path $ProvisionToolPath -ChildPath "InstallClient.ps1"
 
-. $ScriptFile $DomainFullName $CMUser $ClientName $INTRName $Role $ProvisionToolPath
+#. $ScriptFile $DomainFullName $CMUser $ClientName $INTRName $Role $ProvisionToolPath
