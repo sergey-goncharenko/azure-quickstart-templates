@@ -7,7 +7,7 @@
         [Parameter(Mandatory)]
         [String]$DCName,
         [Parameter(Mandatory)]
-        [String]$DPMPName,
+        [String]$INTRName,
         [Parameter(Mandatory)]
         [String]$ClientName,
         [Parameter(Mandatory)]
@@ -25,7 +25,7 @@
     $LogPath = "c:\$LogFolder"
     $DName = $DomainName.Split(".")[0]
     $DCComputerAccount = "$DName\$DCName$"
-    $DPMPComputerAccount = "$DName\$DPMPName$"
+    $INTRComputerAccount = "$DName\$INTRName$"
     
     [System.Management.Automation.PSCredential]$DomainCreds = New-Object System.Management.Automation.PSCredential ("${DomainName}\$($Admincreds.UserName)", $Admincreds.Password)
 
@@ -56,21 +56,21 @@
             DependsOn = "[AddBuiltinPermission]AddSQLPermission"
         }
 
-        InstallADK ADKInstall
-        {
-            ADKPath = "C:\adksetup.exe"
-            ADKWinPEPath = "c:\adksetupwinpe.exe"
-            Ensure = "Present"
-            DependsOn = "[InstallFeatureForSCCM]InstallFeature"
-        }
+#        InstallADK ADKInstall
+#        {
+#            ADKPath = "C:\adksetup.exe"
+#            ADKWinPEPath = "c:\adksetupwinpe.exe"
+#            Ensure = "Present"
+#            DependsOn = "[InstallFeatureForSCCM]InstallFeature"
+#        }
 
-        DownloadSCCM DownLoadSCCM
-        {
-            CM = $CM
-            ExtPath = $LogPath
-            Ensure = "Present"
-            DependsOn = "[InstallADK]ADKInstall"
-        }
+#        DownloadSCCM DownLoadSCCM
+#        {
+#            CM = $CM
+#            ExtPath = $LogPath
+#            Ensure = "Present"
+#            DependsOn = "[InstallADK]ADKInstall"
+#        }
 
         SetDNS DnsServerAddress
         {
@@ -147,7 +147,7 @@
             TaskName = "ScriptWorkFlow"
             ScriptName = "ScriptWorkFlow.ps1"
             ScriptPath = $PSScriptRoot
-            ScriptArgument = "$DomainName $CM $DName\$($Admincreds.UserName) $DPMPName $ClientName"
+            ScriptArgument = "$DomainName $CM $DName\$($Admincreds.UserName) $INTRName $ClientName"
             Ensure = "Present"
             DependsOn = "[FileReadAccessShare]CMSourceSMBShare"
         }

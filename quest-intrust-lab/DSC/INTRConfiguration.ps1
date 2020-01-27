@@ -7,7 +7,7 @@
         [Parameter(Mandatory)]
         [String]$DCName,
         [Parameter(Mandatory)]
-        [String]$DPMPName,
+        [String]$INTRName,
         [Parameter(Mandatory)]
         [String]$ClientName,
         [Parameter(Mandatory)]
@@ -53,7 +53,7 @@
 
         InstallFeatureForSCCM InstallFeature
         {
-            Name = "DPMP"
+            Name = "INTR"
             Role = "Distribution Point","Management Point"
             DependsOn = "[SetCustomPagingFile]PagingSettings"
         }
@@ -100,7 +100,7 @@
 
         OpenFirewallPortForSCCM OpenFirewall
         {
-            Name = "DPMP"
+            Name = "INTR"
             Role = "Distribution Point","Management Point"
             DependsOn = "[JoinDomain]JoinDomain"
         }
@@ -117,11 +117,11 @@
             DependsOn = "[FileReadAccessShare]DomainSMBShare"
         }
 
-        WriteConfigurationFile WriteDPMPFinished
+        WriteConfigurationFile WriteINTRFinished
         {
-            Role = "DPMP"
+            Role = "INTR"
             LogPath = $LogPath
-            WriteNode = "DPMPFinished"
+            WriteNode = "INTRFinished"
             Status = "Passed"
             Ensure = "Present"
             DependsOn = "[AddUserToLocalAdminGroup]AddADUserToLocalAdminGroup","[AddUserToLocalAdminGroup]AddADComputerToLocalAdminGroup"

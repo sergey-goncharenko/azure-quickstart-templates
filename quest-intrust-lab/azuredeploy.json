@@ -30,7 +30,7 @@
       "metadata": {
         "description": "The base URI where artifacts required by this template are located including a trailing '/'"
       },
-      "defaultValue": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/sccm-currentbranch/"
+      "defaultValue": "https://github.com/sergey-goncharenko/azure-quickstart-templates/master/quest-intrust-lab"
     },
     "_artifactsLocationSasToken": {
       "type": "securestring",
@@ -72,13 +72,13 @@
     },
     "vmrole": [
       "DC",
-      "DPMP",
+      "INTR",
       "Client",
       "PS"
     ],
     "vmname": [
       "DC01",
-      "DPMP01",
+      "INTR01",
       "Cl01",
       "PS01"
     ],
@@ -101,7 +101,7 @@
         "sku": "2019-Datacenter",
         "version": "latest"
       },
-      "DPMP": {
+      "INTR": {
         "publisher": "MicrosoftWindowsServer",
         "offer": "WindowsServer",
         "sku": "2019-Datacenter",
@@ -197,7 +197,7 @@
           "Properties": {
             "DomainName": "[variables('domainName')]",
             "DCName": "[concat(parameters('prefix'),variables('vmname')[0])]",
-            "DPMPName": "[concat(parameters('prefix'),variables('vmname')[1])]",
+            "INTRName": "[concat(parameters('prefix'),variables('vmname')[1])]",
             "ClientName": "[concat(parameters('prefix'),variables('vmname')[2])]",
             "PSName": "[concat(parameters('prefix'),variables('vmname')[3])]",
             "DNSIPAddress": "[concat(variables('networkSettings').virtualMachinesIPAddress,add(int('0'),int('4')))]",

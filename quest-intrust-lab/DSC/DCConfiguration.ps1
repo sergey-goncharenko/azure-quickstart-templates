@@ -7,7 +7,7 @@
         [Parameter(Mandatory)]
         [String]$DCName,
         [Parameter(Mandatory)]
-        [String]$DPMPName,
+        [String]$INTRName,
         [Parameter(Mandatory)]
         [String]$ClientName,
         [Parameter(Mandatory)]
@@ -25,7 +25,7 @@
     $CM = "CMCB"
     $DName = $DomainName.Split(".")[0]
     $PSComputerAccount = "$DName\$PSName$"
-    $DPMPComputerAccount = "$DName\$DPMPName$"
+    $INTRComputerAccount = "$DName\$INTRName$"
     $ClientComputerAccount = "$DName\$ClientName$"
 
     [System.Management.Automation.PSCredential]$DomainCreds = New-Object System.Management.Automation.PSCredential ("${DomainName}\$($Admincreds.UserName)", $Admincreds.Password)
@@ -72,9 +72,9 @@
             DependsOn = "[InstallCA]InstallCA"
         }
 
-        VerifyComputerJoinDomain WaitForDPMP
+        VerifyComputerJoinDomain WaitForINTR
         {
-            ComputerName = $DPMPName
+            ComputerName = $INTRName
             Ensure = "Present"
             DependsOn = "[InstallCA]InstallCA"
         }
@@ -91,14 +91,14 @@
             DestinationPath = $LogPath     
             Type = 'Directory'            
             Ensure = 'Present'
-            DependsOn = @("[VerifyComputerJoinDomain]WaitForPS","[VerifyComputerJoinDomain]WaitForDPMP","[VerifyComputerJoinDomain]WaitForClient")
+            DependsOn = @("[VerifyComputerJoinDomain]WaitForPS","[VerifyComputerJoinDomain]WaitForINTR","[VerifyComputerJoinDomain]WaitForClient")
         }
 
         FileReadAccessShare DomainSMBShare
         {
             Name   = $LogFolder
             Path =  $LogPath
-            Account = $PSComputerAccount,$DPMPComputerAccount,$ClientComputerAccount
+            Account = $PSComputerAccount,$INTRComputerAccount,$ClientComputerAccount
             DependsOn = "[File]ShareFolder"
         }
 
@@ -112,11 +112,11 @@
             DependsOn = "[FileReadAccessShare]DomainSMBShare"
         }
 
-        WriteConfigurationFile WriteDPMPJoinDomain
+        WriteConfigurationFile WriteINTRJoinDomain
         {
             Role = "DC"
             LogPath = $LogPath
-            WriteNode = "DPMPJoinDomain"
+            WriteNode = "INTRJoinDomain"
             Status = "Passed"
             Ensure = "Present"
             DependsOn = "[FileReadAccessShare]DomainSMBShare"
@@ -132,21 +132,21 @@
             DependsOn = "[FileReadAccessShare]DomainSMBShare"
         }
 
-        DelegateControl AddPS
-        {
-            Machine = $PSName
-            DomainFullName = $DomainName
-            Ensure = "Present"
-            DependsOn = "[WriteConfigurationFile]WritePSJoinDomain"
-        }
+#        DelegateControl AddPS
+#        {
+#            Machine = $PSName
+#            DomainFullName = $DomainName
+#            Ensure = "Present"
+#            DependsOn = "[WriteConfigurationFile]WritePSJoinDomain"
+#        }
 
-        DelegateControl AddDPMP
-        {
-            Machine = $DPMPName
-            DomainFullName = $DomainName
-            Ensure = "Present"
-            DependsOn = "[WriteConfigurationFile]WriteDPMPJoinDomain"
-        }
+#        DelegateControl AddINTR
+#        {
+#            Machine = $INTRName
+#            DomainFullName = $DomainName
+#            Ensure = "Present"
+#            DependsOn = "[WriteConfigurationFile]WriteINTRJoinDomain"
+#        }
 
         WriteConfigurationFile WriteDelegateControlfinished
         {
@@ -155,15 +155,15 @@
             WriteNode = "DelegateControl"
             Status = "Passed"
             Ensure = "Present"
-            DependsOn = @("[DelegateControl]AddPS","[DelegateControl]AddDPMP")
+            DependsOn = @("[DelegateControl]AddPS","[DelegateControl]AddINTR")
         }
 
-        WaitForExtendSchemaFile WaitForExtendSchemaFile
-        {
-            MachineName = $PSName
-            ExtFolder = $CM
-            Ensure = "Present"
-            DependsOn = "[WriteConfigurationFile]WriteDelegateControlfinished"
-        }
+#        WaitForExtendSchemaFile WaitForExtendSchemaFile
+#        {
+#            MachineName = $PSName
+#            ExtFolder = $CM
+#            Ensure = "Present"
+#            DependsOn = "[WriteConfigurationFile]WriteDelegateControlfinished"
+#        }
     }
 }
