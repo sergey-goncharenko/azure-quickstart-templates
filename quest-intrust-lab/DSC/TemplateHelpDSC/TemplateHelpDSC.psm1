@@ -239,7 +239,7 @@ class WriteConfigurationFile
                     StartTime = ''
                     EndTime = ''
                 }
-                DPMPJoinDomain = @{
+                INTRJoinDomain = @{
                     Status = 'NotStart'
                     StartTime = ''
                     EndTime = ''
@@ -259,7 +259,7 @@ class WriteConfigurationFile
                     StartTime = ''
                     EndTime = ''
                 }
-                DPMPFinished = @{
+                INTRFinished = @{
                     Status = 'NotStart'
                     StartTime = ''
                     EndTime = ''
@@ -565,7 +565,7 @@ class InstallDP
     [string] $DomainFullName
 
     [DscProperty(Mandatory)]
-    [string] $DPMPName
+    [string] $INTRName
     
     [DscProperty(Mandatory)]
     [Ensure] $Ensure
@@ -603,7 +603,7 @@ class InstallDP
         # Set the current location to be the site code.
         Set-Location "$($this.SiteCode):\" @initParams
 
-        $DPServerFullName = $this.DPMPName + "." + $this.DomainFullName
+        $DPServerFullName = $this.INTRName + "." + $this.DomainFullName
         if($(Get-CMSiteSystemServer -SiteSystemServerName $DPServerFullName) -eq $null)
         {
             New-CMSiteSystemServer -Servername $DPServerFullName -Sitecode $this.SiteCode
@@ -634,7 +634,7 @@ class InstallMP
     [string] $DomainFullName
 
     [DscProperty(Mandatory)]
-    [string] $DPMPName
+    [string] $INTRName
     
     [DscProperty(Mandatory)]
     [Ensure] $Ensure
@@ -671,7 +671,7 @@ class InstallMP
         # Set the current location to be the site code.
         Set-Location "$($this.SiteCode):\" @initParams
 
-        $MPServerFullName = $this.DPMPName + "." + $this.DomainFullName
+        $MPServerFullName = $this.INTRName + "." + $this.DomainFullName
         if(!(Get-CMSiteSystemServer -SiteSystemServerName $MPServerFullName))
         {
             Write-Verbose "Creating cm site system server..."
