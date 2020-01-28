@@ -64,19 +64,19 @@
 #            DependsOn = "[InstallFeatureForSCCM]InstallFeature"
 #        }
 
-#        DownloadSCCM DownLoadSCCM
-#        {
-#            CM = $CM
-#            ExtPath = $LogPath
-#            Ensure = "Present"
-#            DependsOn = "[InstallADK]ADKInstall"
-#        }
+        DownloadSCCM DownLoadSCCM
+        {
+            CM = $CM
+            ExtPath = $LogPath
+            Ensure = "Present"
+            DependsOn = "[InstallFeatureForSCCM]InstallFeature"
+        }
 
         SetDNS DnsServerAddress
         {
             DNSIPAddress = $DNSIPAddress
             Ensure = "Present"
-            DependsOn = "[InstallFeatureForSCCM]InstallFeature"
+            DependsOn = "[DownloadSCCM]DownLoadSCCM"
         }
 
         WaitForDomainReady WaitForDomain
