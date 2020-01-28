@@ -155,7 +155,7 @@
             WriteNode = "DelegateControl"
             Status = "Passed"
             Ensure = "Present"
-            DependsOn = @("[DelegateControl]AddPS","[DelegateControl]AddINTR")
+            DependsOn = @("[FileReadAccessShare]DomainSMBShare","[FileReadAccessShare]DomainSMBShare")
         }
 
 #        WaitForExtendSchemaFile WaitForExtendSchemaFile

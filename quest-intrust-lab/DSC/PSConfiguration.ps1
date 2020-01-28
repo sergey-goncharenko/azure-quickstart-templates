@@ -76,7 +76,7 @@
         {
             DNSIPAddress = $DNSIPAddress
             Ensure = "Present"
-            DependsOn = "[DownloadSCCM]DownLoadSCCM"
+            DependsOn = "[InstallFeatureForSCCM]InstallFeature"
         }
 
         WaitForDomainReady WaitForDomain

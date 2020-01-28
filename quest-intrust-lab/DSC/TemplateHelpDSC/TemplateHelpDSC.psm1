@@ -1267,8 +1267,8 @@ class OpenFirewallPortForSCCM
             #site server<->site server
             New-NetFirewallRule -DisplayName 'SMB Inbound' -Profile Domain -Direction Inbound -Action Allow -Protocol TCP -LocalPort 445 -Group "For SCCM"
             New-NetFirewallRule -DisplayName 'SMB Outbound' -Profile Domain -Direction Outbound -Action Allow -Protocol TCP -LocalPort 445 -Group "For SCCM"
-            New-NetFirewallRule -DisplayName 'PPTP Inbound' -Profile Domain -Direction Inbound -Action Allow -Protocol TCP -LocalPort 1723 -Group "For SCCM"
-            New-NetFirewallRule -DisplayName 'PPTP Outbound' -Profile Domain -Direction Outbound -Action Allow -Protocol TCP -LocalPort 1723 -Group "For SCCM"
+            #New-NetFirewallRule -DisplayName 'PPTP Inbound' -Profile Domain -Direction Inbound -Action Allow -Protocol TCP -LocalPort 1723 -Group "For SCCM"
+            #New-NetFirewallRule -DisplayName 'PPTP Outbound' -Profile Domain -Direction Outbound -Action Allow -Protocol TCP -LocalPort 1723 -Group "For SCCM"
 
             #priary site server(out) ->DC
             New-NetFirewallRule -DisplayName 'LDAP Outbound' -Profile Domain -Direction Outbound -Action Allow -Protocol TCP -LocalPort 389 -Group "For SCCM"
@@ -1575,7 +1575,7 @@ class InstallFeatureForSCCM
         if($_Role -contains "Management point")
         {
             #BITS
-            Add-WindowsFeature BITS,BITS-IIS-Ext
+            #Add-WindowsFeature BITS,BITS-IIS-Ext
             #IIS 
             Add-WindowsFeature Web-Windows-Auth,web-ISAPI-Ext
             Add-WindowsFeature Web-WMI,Web-Metabase
