@@ -3,13 +3,13 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "prefix": {
-      "value": "GEN-UNIQUE-5"
+      "value": "SG-INTR-AZLAB1"
     },
     "adminUsername": {
-      "value": "GEN-UNIQUE-10"
+      "value": "sgintrazlab"
     },
     "adminPassword": {
-      "value": "GEN-PASSWORD"
+      "value": "SGIntrAzLab01"
     }
   }
 }
