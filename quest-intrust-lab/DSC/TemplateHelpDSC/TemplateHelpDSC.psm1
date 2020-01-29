@@ -513,6 +513,9 @@ class DownloadSCCM
 
     [DscProperty(Mandatory)]
     [string] $ExtPath
+	
+	[DscProperty(Key)]
+    [string] $IntrUrl
 
     [DscProperty(Mandatory)]
     [Ensure] $Ensure
@@ -527,8 +530,8 @@ class DownloadSCCM
         $cmpath = "c:\$_CM.exe"
         $cmsourcepath = "c:\$_CM"
 
-        Write-Verbose "Downloading SCCM installation source..."
-        $cmurl = "https://go.microsoft.com/fwlink/?linkid=2093192"
+        Write-Verbose "Downloading InTrust installation source..."
+        $cmurl = $IntrUrl
         Invoke-WebRequest -Uri $cmurl -OutFile $cmpath
         if(!(Test-Path $cmsourcepath))
         {

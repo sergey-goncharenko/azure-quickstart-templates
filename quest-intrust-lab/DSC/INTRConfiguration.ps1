@@ -12,6 +12,8 @@
         [String]$ClientName,
         [Parameter(Mandatory)]
         [String]$PSName,
+		[Parameter(Mandatory)]
+		[String]$IntrUrl,
         [Parameter(Mandatory)]
         [String]$DNSIPAddress,
         [Parameter(Mandatory)]

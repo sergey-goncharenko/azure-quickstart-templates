@@ -25,6 +25,13 @@
         "description": "Input must meet password complexity requirements as documented for property 'adminPassword' in https://docs.microsoft.com/en-us/rest/api/compute/virtualmachines/virtualmachines-create-or-update"
       }
     },
+	"IntrPackage": {
+      "type": "string",
+      "minLength": 8,
+      "metadata": {
+        "description": "URL to download InTrust"
+      }
+    },
     "_artifactsLocation": {
       "type": "string",
       "metadata": {
@@ -200,6 +207,7 @@
             "INTRName": "[concat(parameters('prefix'),variables('vmname')[1])]",
             "ClientName": "[concat(parameters('prefix'),variables('vmname')[2])]",
             "PSName": "[concat(parameters('prefix'),variables('vmname')[3])]",
+			"IntrUrl": "[parameters('IntrPackage')]",
             "DNSIPAddress": "[concat(variables('networkSettings').virtualMachinesIPAddress,add(int('0'),int('4')))]",
             "AdminCreds": {
               "UserName": "[parameters('adminUsername')]",

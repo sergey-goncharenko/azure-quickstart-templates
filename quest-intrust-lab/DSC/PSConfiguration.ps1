@@ -13,6 +13,8 @@
         [Parameter(Mandatory)]
         [String]$PSName,
         [Parameter(Mandatory)]
+		[String]$IntrUrl,
+        [Parameter(Mandatory)]
         [String]$DNSIPAddress,
         [Parameter(Mandatory)]
         [System.Management.Automation.PSCredential]$Admincreds
@@ -21,7 +23,7 @@
     Import-DscResource -ModuleName TemplateHelpDSC
     
     $LogFolder = "TempLog"
-    $CM = "CMCB"
+    $CM = "IntrFull"
     $LogPath = "c:\$LogFolder"
     $DName = $DomainName.Split(".")[0]
     $DCComputerAccount = "$DName\$DCName$"
@@ -68,6 +70,7 @@
         {
             CM = $CM
             ExtPath = $LogPath
+			IntrUrl= $IntrUrl
             Ensure = "Present"
             DependsOn = "[InstallFeatureForSCCM]InstallFeature"
         }
