@@ -531,7 +531,7 @@ class DownloadSCCM
         $cmsourcepath = "c:\$_CM"
 
         Write-Verbose "Downloading InTrust installation source..."
-        $cmurl = $IntrUrl
+        $cmurl = $this.IntrUrl
         Invoke-WebRequest -Uri $cmurl -OutFile $cmpath
         if(!(Test-Path $cmsourcepath))
         {
