@@ -140,6 +140,15 @@
             DependsOn = "[AddUserToLocalAdminGroup]AddADUserToLocalAdminGroup","[AddUserToLocalAdminGroup]AddADComputerToLocalAdminGroup"
         }
 		
+		InstallInTrust InstallInTrustTask
+        {
+            CM = $CM
+            Adminpass = $Admincreds.Password
+			PSName = $PSName
+            Ensure = "Present"
+            DependsOn = "[WriteConfigurationFile]WriteINTRFinished"
+        }
+		
 		RegisterTaskScheduler InstallAndUpdateSCCM
         {
             TaskName = "ScriptWorkFlow"
@@ -147,7 +156,7 @@
             ScriptPath = $PSScriptRoot
             ScriptArgument = "$DomainName $CM $DName\$($Admincreds.UserName) $INTRName $ClientName"
             Ensure = "Present"
-            DependsOn = "[WriteConfigurationFile]WriteINTRFinished"
+            DependsOn = "[InstallInTrust]InstallInTrustTask"
         }
     }
 }

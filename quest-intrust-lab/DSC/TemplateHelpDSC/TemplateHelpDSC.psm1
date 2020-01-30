@@ -185,6 +185,54 @@ class InstallAndConfigWSUS
 }
 
 [DscResource()]
+class InstallInTrust
+{
+    [DscProperty(Key)]
+    [string] $CM
+	
+	[DscProperty(Key)]
+    [string] $AdminPass
+	
+	[DscProperty(Key)]
+    [string] $PSName
+
+    [DscProperty(Mandatory)]
+    [Ensure] $Ensure
+
+    [DscProperty(NotConfigurable)]
+    [Nullable[datetime]] $CreationTime
+
+    [void] Set()
+    {
+		$_CM = $this.CM
+        $cmpath = "c:\$_CM.exe"
+        $cmsourcepath = "c:\$_CM"
+		
+        Import-Module .\Installation.psm1
+		Import-Module .\SetInstallationParameters.psm1
+
+		Initialize-EnvironmentVariables -commonPsw $this.AdminPass -sqlServer $this.PSName -sqlReportServer $this.PSName
+		Install-InTrustServer -PackageRootPath $cmsourcepath
+		
+    }
+
+    [bool] Test()
+    {
+        if((Get-WindowsFeature -Name UpdateServices).installed -eq 'True')
+        {
+            return $true
+        }
+        return $false
+    }
+
+    [InstallInTrust] Get()
+    {
+        return $this
+    }
+    
+}
+
+[DscResource()]
 class WriteConfigurationFile
 {
     [DscProperty(Key)]
