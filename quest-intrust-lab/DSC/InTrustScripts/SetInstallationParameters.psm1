@@ -427,7 +427,7 @@ function Get-DefaultMonitoringConsoleWebVirtualFolder
 
 function Initialize-EnvironmentVariables
 {
-    $commonPsw = "123qweASD"
+    $commonPsw = "SGTest123"
 
     $organizationName = hostname
     $organizationPassword = $commonPsw
