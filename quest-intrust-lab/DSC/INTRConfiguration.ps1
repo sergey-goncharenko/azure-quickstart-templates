@@ -23,6 +23,7 @@
     Import-DscResource -ModuleName TemplateHelpDSC
 
     $LogFolder = "TempLog"
+	$CM = "IntrFull"
     $LogPath = "c:\$LogFolder"
     $DName = $DomainName.Split(".")[0]
     $DCComputerAccount = "$DName\$DCName$"
@@ -30,6 +31,7 @@
 
     [System.Management.Automation.PSCredential]$DomainCreds = New-Object System.Management.Automation.PSCredential ("${DomainName}\$($Admincreds.UserName)", $Admincreds.Password)
     $PrimarySiteName = $PSName.split(".")[0] + "$"
+    $INTRComputerAccount = "$DName\$INTRName$"
 
     Node localhost
     {
@@ -46,11 +48,20 @@
             MaximumSize = '8192'
         }
 
+        DownloadSCCM DownLoadSCCM
+        {
+            CM = $CM
+            ExtPath = $LogPath
+			IntrUrl= $IntrUrl
+            Ensure = "Present"
+            DependsOn = "[SetCustomPagingFile]PagingSettings"
+        }
+
         SetDNS DnsServerAddress
         {
             DNSIPAddress = $DNSIPAddress
             Ensure = "Present"
-            DependsOn = "[SetCustomPagingFile]PagingSettings"
+            DependsOn = "[DownloadSCCM]DownLoadSCCM"
         }
 
         InstallFeatureForSCCM InstallFeature
@@ -127,6 +138,16 @@
             Status = "Passed"
             Ensure = "Present"
             DependsOn = "[AddUserToLocalAdminGroup]AddADUserToLocalAdminGroup","[AddUserToLocalAdminGroup]AddADComputerToLocalAdminGroup"
+        }
+		
+		RegisterTaskScheduler InstallAndUpdateSCCM
+        {
+            TaskName = "ScriptWorkFlow"
+            ScriptName = "ScriptWorkFlow.ps1"
+            ScriptPath = $PSScriptRoot
+            ScriptArgument = "$DomainName $CM $DName\$($Admincreds.UserName) $INTRName $ClientName"
+            Ensure = "Present"
+            DependsOn = "[WriteConfigurationFile]WriteINTRFinished"
         }
     }
 }
