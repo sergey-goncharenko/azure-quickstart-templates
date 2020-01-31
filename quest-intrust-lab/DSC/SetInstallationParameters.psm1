@@ -427,7 +427,18 @@ function Get-DefaultMonitoringConsoleWebVirtualFolder
 
 function Initialize-EnvironmentVariables
 {
-    $commonPsw = "SGTest123"
+    param
+    (
+        [string]
+        $commonPsw = "SGTest123",
+        
+        [string]
+        $sqlServer = "localhost",
+
+        [string]
+        $sqlReportServer="localhost"        
+    )
+    #$commonPsw = "SGTest123"
 
     $organizationName = hostname
     $organizationPassword = $commonPsw
@@ -442,12 +453,12 @@ function Initialize-EnvironmentVariables
     $smtpServer = hostname
     $netSenderComputer = hostname
     
-    $sqlServer = hostname
+    #$sqlServer = hostname
     $sqlServerLoginAccount = "$env:USERDOMAIN\$env:USERNAME"    #useless when AuthenticationMode is 1
     $sqlServerLoginPassward = $commonPsw                        #useless when AuthenticationMode is 1
-    $sqlReportServer =  hostname
+    #$sqlReportServer =  hostname
     
-    $intrustReportServer = hostname
+    $intrustReportServer = $sqlReportServer
     
     $domainName = "$env:USERDNSDOMAIN"
         
