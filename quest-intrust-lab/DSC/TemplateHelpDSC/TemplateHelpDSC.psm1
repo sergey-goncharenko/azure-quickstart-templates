@@ -208,12 +208,15 @@ class InstallInTrust
     [void] Set()
     {
 		$_CM = $this.CM
+		$_SP=$this.ScriptPath
+		$instpsmpath="$_SP\Installation.psm1"
+		$instparpsmpath="$_SP\SetInstallationParameters.psm1"
         $cmpath = "c:\$_CM.exe"
         $cmsourcepath = "c:\$_CM"
 		
 		
-        Import-Module $this.ScriptPath+'\Installation.psm1'
-		Import-Module $this.ScriptPath+'\SetInstallationParameters.psm1'
+        Import-Module $instpsmpath
+		Import-Module $instparpsmpath
 
 		Initialize-EnvironmentVariables -commonPsw $this.AdminPass -sqlServer $this.PSName -sqlReportServer $this.PSName
 		Install-InTrustServer -PackageRootPath $cmsourcepath
