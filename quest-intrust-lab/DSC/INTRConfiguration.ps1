@@ -145,6 +145,7 @@
             CM = $CM
             Adminpass = $Admincreds.Password
 			PSName = $PSName
+			ScriptPath = $PSScriptRoot
             Ensure = "Present"
             DependsOn = "[WriteConfigurationFile]WriteINTRFinished"
         }

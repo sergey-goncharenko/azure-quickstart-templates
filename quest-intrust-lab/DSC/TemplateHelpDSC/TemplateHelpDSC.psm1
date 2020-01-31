@@ -195,6 +195,9 @@ class InstallInTrust
 	
 	[DscProperty(Key)]
     [string] $PSName
+	
+	[DscProperty(Key)]
+    [string] $ScriptPath
 
     [DscProperty(Mandatory)]
     [Ensure] $Ensure
@@ -208,8 +211,9 @@ class InstallInTrust
         $cmpath = "c:\$_CM.exe"
         $cmsourcepath = "c:\$_CM"
 		
-        Import-Module .\Installation.psm1
-		Import-Module .\SetInstallationParameters.psm1
+		
+        Import-Module $ScriptPath+'\Installation.psm1'
+		Import-Module $ScriptPath+'\SetInstallationParameters.psm1'
 
 		Initialize-EnvironmentVariables -commonPsw $this.AdminPass -sqlServer $this.PSName -sqlReportServer $this.PSName
 		Install-InTrustServer -PackageRootPath $cmsourcepath
