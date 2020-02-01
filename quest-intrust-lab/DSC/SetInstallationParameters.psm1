@@ -489,7 +489,8 @@ function Initialize-EnvironmentVariables
 
 Initialize-EnvironmentVariables
 
-Export-ModuleMember -Function Set-DefaultTargetPath,
+Export-ModuleMember -Function Initialize-EnvironmentVariables,
+                            Set-DefaultTargetPath,
                             Set-DefaultOrganizationCfg,
                             Set-DefaultServiceAccount,
                             Set-DefaultInTrustPort,
