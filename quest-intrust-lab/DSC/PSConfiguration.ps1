@@ -15,6 +15,8 @@
         [Parameter(Mandatory)]
 		[String]$IntrUrl,
         [Parameter(Mandatory)]
+		[String]$IntrLicUrl,
+        [Parameter(Mandatory)]
         [String]$DNSIPAddress,
         [Parameter(Mandatory)]
         [System.Management.Automation.PSCredential]$Admincreds
@@ -71,6 +73,7 @@
             CM = $CM
             ExtPath = $LogPath
 			IntrUrl= $IntrUrl
+			IntrLicUrl= $IntrLicUrl
             Ensure = "Present"
             DependsOn = "[InstallFeatureForSCCM]InstallFeature"
         }

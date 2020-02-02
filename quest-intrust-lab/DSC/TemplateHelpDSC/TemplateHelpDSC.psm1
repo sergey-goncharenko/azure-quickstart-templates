@@ -219,7 +219,10 @@ class InstallInTrust
 		Import-Module $instparpsmpath
 
 		Initialize-EnvironmentVariables -commonPsw $this.AdminPass -sqlServer $this.PSName -sqlReportServer $this.PSName
+		Install-VCRedist -PackageRootPath $cmsourcepath
+		Install-SQLNativeClient -PackageRootPath $cmsourcepath
 		Install-InTrustServer -PackageRootPath $cmsourcepath
+		Install-InTrustManager -PackageRootPath $cmsourcepath
 		
     }
 
@@ -572,6 +575,9 @@ class DownloadSCCM
 	[DscProperty(Key)]
     [string] $IntrUrl
 
+	[DscProperty(Key)]
+    [string] $IntrLicUrl
+
     [DscProperty(Mandatory)]
     [Ensure] $Ensure
 
@@ -587,11 +593,14 @@ class DownloadSCCM
 
         Write-Verbose "Downloading InTrust installation source..."
         $cmurl = $this.IntrUrl
+		$cmlicurl = $this.IntrLicUrl
         Invoke-WebRequest -Uri $cmurl -OutFile $cmpath
         if(!(Test-Path $cmsourcepath))
         {
             Start-Process -Filepath ($cmpath) -ArgumentList ('-y -o"' + $cmsourcepath + '"') -wait
         }
+		$cmlicpath = "$cmsourcepath\License.asc"
+		Invoke-WebRequest -Uri $cmlicurl -OutFile $cmlicpath
     }
 
     [bool] Test()

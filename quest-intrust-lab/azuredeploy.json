@@ -32,6 +32,13 @@
         "description": "URL to download InTrust"
       }
     },
+	"IntrLic": {
+      "type": "string",
+      "minLength": 8,
+      "metadata": {
+        "description": "URL to download InTrust license"
+      }
+    },
     "_artifactsLocation": {
       "type": "string",
       "metadata": {
@@ -208,6 +215,7 @@
             "ClientName": "[concat(parameters('prefix'),variables('vmname')[2])]",
             "PSName": "[concat(parameters('prefix'),variables('vmname')[3])]",
 			"IntrUrl": "[parameters('IntrPackage')]",
+			"IntrLicUrl": "[parameters('IntrLic')]",
             "DNSIPAddress": "[concat(variables('networkSettings').virtualMachinesIPAddress,add(int('0'),int('4')))]",
             "AdminCreds": {
               "UserName": "[parameters('adminUsername')]",

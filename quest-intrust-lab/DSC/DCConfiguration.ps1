@@ -15,6 +15,8 @@
 		[Parameter(Mandatory)]
 		[String]$IntrUrl,
         [Parameter(Mandatory)]
+		[String]$IntrLicUrl,
+        [Parameter(Mandatory)]
         [String]$DNSIPAddress,
         [Parameter(Mandatory)]
         [System.Management.Automation.PSCredential]$Admincreds

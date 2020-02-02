@@ -505,7 +505,7 @@ function Install-InTrustLicense
     (
         [ValidateNotNullOrEmpty()]
         [string]
-        $LicenseFullName = "C:\InTrust\ATSource\Autotest\License\IT_Users11.asc"
+        $LicenseFullName = "C:\temp\License.asc"
     )
     
     Write-Host "`nTry to install new license" -ForegroundColor Green
