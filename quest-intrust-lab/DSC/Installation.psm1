@@ -43,7 +43,8 @@ function Install-SQLNativeClient
     $packageFileInfo =  Get-InTrustPackageInfo  -PackageRootPath $PackageRootPath -RelativePath $RelativePath -PackageName "sqlncli.msi" -LiteralName
     if($packageFileInfo -ne $null)
     {
-        return Retry-Command { Start-InstallationProgram -PackageFileInfo $packageFileInfo }
+		$installArguments = "IACCEPTSQLNCLILICENSETERMS=YES"
+        return Retry-Command { Start-InstallationProgram -PackageFileInfo $packageFileInfo -ArgumentList $installArguments  }
     }
     
     return -1    
