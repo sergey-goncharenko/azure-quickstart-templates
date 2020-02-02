@@ -193,6 +193,13 @@ class InstallInTrust
 	[DscProperty(Key)]
     [string] $AdminPass
 	
+    [DscProperty(Key)]
+    [string] $DomainName
+
+    [DscProperty(Mandatory)]
+    [System.Management.Automation.PSCredential] $Credential
+
+	
 	[DscProperty(Key)]
     [string] $PSName
 	
@@ -209,6 +216,7 @@ class InstallInTrust
     {
 		$_CM = $this.CM
 		$_SP=$this.ScriptPath
+		$usernm=$this.Credential.UserName
 		$instpsmpath="$_SP\Installation.psm1"
 		$instparpsmpath="$_SP\SetInstallationParameters.psm1"
         $cmpath = "c:\$_CM.exe"
@@ -218,7 +226,9 @@ class InstallInTrust
         Import-Module $instpsmpath
 		Import-Module $instparpsmpath
 
-		Initialize-EnvironmentVariables -commonPsw $this.AdminPass -sqlServer $this.PSName -sqlReportServer $this.PSName
+		$creds=$usernm
+
+		Initialize-EnvironmentVariables -commonPsw $this.AdminPass -sqlServer $this.PSName -sqlReportServer $this.PSName -serviceAccount $creds
 		Install-VCRedist -PackageRootPath $cmsourcepath
 		Install-SQLNativeClient -PackageRootPath $cmsourcepath
 		Install-InTrustServer -PackageRootPath $cmsourcepath

@@ -437,13 +437,16 @@ function Initialize-EnvironmentVariables
 
         [string]
         $sqlReportServer="localhost"        
+		
+		[string]
+        $serviceAccount="$env:USERDOMAIN\$env:USERNAME"     
     )
     #$commonPsw = "SGTest123"
 
     $organizationName = hostname
     $organizationPassword = $commonPsw
     
-    $serviceAccount = "$env:USERDOMAIN\$env:USERNAME"
+    $serviceAccount = $serviceAccount
     $serviceAccountPassword = $commonPsw
     
     $configDBName = $env:COMPUTERNAME + '_CfgDb'
@@ -454,7 +457,7 @@ function Initialize-EnvironmentVariables
     $netSenderComputer = hostname
     
     #$sqlServer = hostname
-    $sqlServerLoginAccount = "$env:USERDOMAIN\$env:USERNAME"    #useless when AuthenticationMode is 1
+    $sqlServerLoginAccount = $serviceAccount   #useless when AuthenticationMode is 1
     $sqlServerLoginPassward = $commonPsw                        #useless when AuthenticationMode is 1
     #$sqlReportServer =  hostname
     

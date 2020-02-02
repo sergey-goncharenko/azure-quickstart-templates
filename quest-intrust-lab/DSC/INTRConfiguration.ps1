@@ -147,6 +147,8 @@
         {
             CM = $CM
             Adminpass = $Admincreds.Password
+			DomainName = $DomainName
+            Credential = $DomainCreds
 			PSName = $PSName
 			ScriptPath = $PSScriptRoot
             Ensure = "Present"
