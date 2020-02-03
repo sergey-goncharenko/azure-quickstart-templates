@@ -436,7 +436,7 @@ function Initialize-EnvironmentVariables
         $sqlServer = "localhost",
 
         [string]
-        $sqlReportServer="localhost"        
+        $sqlReportServer="localhost",        
 		
 		[string]
         $serviceAccount="$env:USERDOMAIN\$env:USERNAME"     
