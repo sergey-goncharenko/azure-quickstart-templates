@@ -617,8 +617,8 @@ function Get-BasicInstallCmdline
     }
     elseif($PackageFileInfo.Extension -eq ".msi")
     {
-        $cmdline  = " /quiet"  
-        $cmdline += " /l*v """  + (Get-InstallLogFile $PackageFileInfo) + """"
+        $cmdline  = " /passive"  
+        $cmdline += " /l*vx """  + (Get-InstallLogFile $PackageFileInfo) + """"
         $cmdline += " /i """ + $PackageFileInfo.FullName + """"
     }
 
@@ -867,7 +867,7 @@ function Get-ConfigurationDBSettings
     else
     {
         #If ITRT_DB_LOGIN_TRUSTED is set to 0, specifies the user name for SQL Server authentication.
-        $parameter += ' {0}="{1}"' -f ("ADC_SQL_USERNAME", "$env:USERDOMAIN\$env:USERNAME")
+        $parameter += ' {0}="{1}"' -f ("ADC_SQL_USERNAME", "$LogonName")
     }
 
     return $parameter
@@ -900,7 +900,7 @@ function Get-AuditDBSettings
     else
     {
         #If ITRT_DB_LOGIN_TRUSTED is set to 0, specifies the user name for SQL Server authentication.
-        $parameter += ' {0}="{1}"' -f ("ITAUD_SQL_USERNAME", "$env:USERDOMAIN\$env:USERNAME")
+        $parameter += ' {0}="{1}"' -f ("ITAUD_SQL_USERNAME", "$LogonName")
     }
     
     return $parameter
@@ -933,7 +933,7 @@ function Get-AlertDBSettings
     else
     {
         #If ITRT_DB_LOGIN_TRUSTED is set to 0, specifies the user name for SQL Server authentication.
-        $parameter += ' {0}="{1}"' -f ("ITRT_DB_LOGIN_UID", "$env:USERDOMAIN\$env:USERNAME")
+        $parameter += ' {0}="{1}"' -f ("ITRT_DB_LOGIN_UID", "$LogonName")
     }
     
     return $parameter

@@ -463,7 +463,7 @@ function Initialize-EnvironmentVariables
     
     $intrustReportServer = $sqlReportServer
     
-    $domainName = "$env:USERDNSDOMAIN"
+    $domainName = "$env:USERDOMAIN"
         
     
     Set-DefaultTargetPath -TargetPath  "${env:ProgramFiles(x86)}\Quest\InTrust"
@@ -480,11 +480,11 @@ function Initialize-EnvironmentVariables
     
     Set-DefaultDatabase -ConfigDb $configDBName -AuditDb $auditDBName -AlertDb $alertDBName
     
-    Set-DefaultAutoDiscoverySettings -AutoDiscoveySMTPSetting -AutoDiscoveySRSSettings
+    Set-DefaultAutoDiscoverySettings -AutoDiscoveySMTPSetting #-AutoDiscoveySRSSettings
     
     Set-DefaultSRSPortal -SRSServerName $sqlReportServer
     
-    Set-DefaultInTrustReportWeb -ReportWebServer $intrustReportServer -ReportWebSiteNumber 1 -ReportWebVirtualFolder "QuestKnowledgePortal" -LocalReportFolder ("$Env:Public\Documents\Quest\Reports")
+    #Set-DefaultInTrustReportWeb -ReportWebServer $intrustReportServer -ReportWebSiteNumber 1 -ReportWebVirtualFolder "QuestKnowledgePortal" -LocalReportFolder ("$Env:Public\Documents\Quest\Reports")
     
     Set-DefaultMonitoringConsole -MonitoringConsoleSiteNumber 1 -MonitoringConsoleVirtualFolder "ITMonitoring"
 

@@ -155,14 +155,14 @@
             DependsOn = "[WriteConfigurationFile]WriteINTRFinished"
         }
 		
-		RegisterTaskScheduler InstallAndUpdateSCCM
-        {
-            TaskName = "ScriptWorkFlow"
-            ScriptName = "ScriptWorkFlow.ps1"
-            ScriptPath = $PSScriptRoot
-            ScriptArgument = "$DomainName $CM $DName\$($Admincreds.UserName) $INTRName $ClientName"
-            Ensure = "Present"
-            DependsOn = "[InstallInTrust]InstallInTrustTask"
-        }
+#		RegisterTaskScheduler InstallAndUpdateSCCM
+#        {
+#            TaskName = "ScriptWorkFlow"
+#            ScriptName = "ScriptWorkFlow.ps1"
+#            ScriptPath = $PSScriptRoot
+#            ScriptArgument = "$DomainName $CM $DName\$($Admincreds.UserName) $INTRName $ClientName"
+#            Ensure = "Present"
+#            DependsOn = "[InstallInTrust]InstallInTrustTask"
+#        }
     }
 }
