@@ -217,6 +217,8 @@ class InstallInTrust
 		$_CM = $this.CM
 		$_SP=$this.ScriptPath
 		$usernm=$this.Credential.UserName
+		$admpass=$this.AdminPass
+		$sqlsrv=$this.PSName
 		$instpsmpath="$_SP\Installation.psm1"
 		$instparpsmpath="$_SP\SetInstallationParameters.psm1"
         $cmpath = "c:\$_CM.exe"
@@ -228,8 +230,8 @@ class InstallInTrust
 
 		$creds=$usernm
 
-		$cmd="Initialize-EnvironmentVariables -commonPsw $this.AdminPass -sqlServer $this.PSName -sqlReportServer $this.PSName -serviceAccount $creds"
-		Initialize-EnvironmentVariables -commonPsw $this.AdminPass -sqlServer $this.PSName -sqlReportServer $this.PSName -serviceAccount $creds
+		$cmd="Initialize-EnvironmentVariables -commonPsw $admpass -sqlServer $sqlsrv -sqlReportServer $sqlsrv -serviceAccount $creds"
+		Initialize-EnvironmentVariables -commonPsw $admpass -sqlServer $sqlsrv -sqlReportServer $sqlsrv -serviceAccount $creds
 		$StatusPath = "$cmsourcepath\Installcmd.txt"
             $cmd >> $StatusPath
 		
