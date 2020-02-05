@@ -617,8 +617,8 @@ function Get-BasicInstallCmdline
     }
     elseif($PackageFileInfo.Extension -eq ".msi")
     {
-        $cmdline  = " /passive"  
-        $cmdline += " /l*vx """  + (Get-InstallLogFile $PackageFileInfo) + """"
+        $cmdline  = " /quiet"  
+        $cmdline += " /l*v """  + (Get-InstallLogFile $PackageFileInfo) + """"
         $cmdline += " /i """ + $PackageFileInfo.FullName + """"
     }
 
