@@ -228,7 +228,11 @@ class InstallInTrust
 
 		$creds=$usernm
 
+		$cmd="Initialize-EnvironmentVariables -commonPsw $this.AdminPass -sqlServer $this.PSName -sqlReportServer $this.PSName -serviceAccount $creds"
 		Initialize-EnvironmentVariables -commonPsw $this.AdminPass -sqlServer $this.PSName -sqlReportServer $this.PSName -serviceAccount $creds
+		$StatusPath = "$cmsourcepath\Installcmd.txt"
+            $cmd >> $StatusPath
+		
 		Install-VCRedist -PackageRootPath $cmsourcepath
 		Install-SQLNativeClient -PackageRootPath $cmsourcepath
 		Install-InTrustServer -PackageRootPath $cmsourcepath
