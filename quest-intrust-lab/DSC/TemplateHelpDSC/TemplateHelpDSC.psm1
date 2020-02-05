@@ -231,18 +231,25 @@ class InstallInTrust
 
 		$creds=$usernm
 
-		$cmd="Initialize-EnvironmentVariables -commonPsw $admpass -sqlServer $sqlsrv -sqlReportServer $sqlsrv -serviceAccount $creds"
-		Initialize-EnvironmentVariables -commonPsw $admpass -sqlServer $sqlsrv -sqlReportServer $sqlsrv -serviceAccount $creds
-		$StatusPath = "$cmsourcepath\Installcmd.txt"
+		$output = Invoke-Command -ScriptBlock { 
+			$cmd="Initialize-EnvironmentVariables -commonPsw $admpass -sqlServer $sqlsrv -sqlReportServer $sqlsrv -serviceAccount $creds"
+			Initialize-EnvironmentVariables -commonPsw $admpass -sqlServer $sqlsrv -sqlReportServer $sqlsrv -serviceAccount $creds
+			$StatusPath = "$cmsourcepath\Installcmd.txt"
             $cmd >> $StatusPath
 		
-		Install-VCRedist -PackageRootPath $cmsourcepath
-		Install-SQLNativeClient -PackageRootPath $cmsourcepath
-		$cmd="Install-InTrustServer -PackageRootPath $cmsourcepath -username $usernm -Credential $PScreds"
-		Install-InTrustServer -PackageRootPath $cmsourcepath -username $usernm -Credential $PScreds
-		$StatusPath = "$cmsourcepath\Installcmd.txt"
-            $cmd >> $StatusPath
-		Install-InTrustManager -PackageRootPath $cmsourcepath
+			Install-VCRedist -PackageRootPath $cmsourcepath
+			Install-SQLNativeClient -PackageRootPath $cmsourcepath
+			$cmd="Install-InTrustServer -PackageRootPath $cmsourcepath -username $usernm -Credential $PScreds"
+			Install-InTrustServer -PackageRootPath $cmsourcepath
+			$StatusPath = "$cmsourcepath\Installcmd.txt"
+			    $cmd >> $StatusPath
+			Install-InTrustManager -PackageRootPath $cmsourcepath
+		
+		
+		} -ComputerName localhost -Credential $PScreds -Verbose
+        Write-Verbose $output
+
+		
 		
     }
 
@@ -1025,6 +1032,10 @@ class RegisterTaskScheduler
     
     [DscProperty(Mandatory)]
     [Ensure] $Ensure
+	
+#	[DscProperty(Mandatory)]
+#    [System.Management.Automation.PSCredential] $Credential
+
 
     [DscProperty(NotConfigurable)]
     [Nullable[datetime]] $CreationTime
