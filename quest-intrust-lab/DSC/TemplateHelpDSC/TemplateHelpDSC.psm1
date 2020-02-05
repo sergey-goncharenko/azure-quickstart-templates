@@ -224,14 +224,11 @@ class InstallInTrust
 		$instparpsmpath="$_SP\SetInstallationParameters.psm1"
         $cmpath = "c:\$_CM.exe"
         $cmsourcepath = "c:\$_CM"
-		
-		
-        Import-Module $instpsmpath
-		Import-Module $instparpsmpath
-
 		$creds=$usernm
 
 		$output = Invoke-Command -ScriptBlock { 
+		    Import-Module $instpsmpath
+			Import-Module $instparpsmpath
 			$cmd="Initialize-EnvironmentVariables -commonPsw $admpass -sqlServer $sqlsrv -sqlReportServer $sqlsrv -serviceAccount $creds"
 			Initialize-EnvironmentVariables -commonPsw $admpass -sqlServer $sqlsrv -sqlReportServer $sqlsrv -serviceAccount $creds
 			$StatusPath = "$cmsourcepath\Installcmd.txt"

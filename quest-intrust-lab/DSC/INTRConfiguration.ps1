@@ -158,11 +158,11 @@
 #		RegisterTaskScheduler InstallAndUpdateSCCM
 #        {
 #            TaskName = "ScriptWorkFlow"
-#            ScriptName = "ScriptWorkFlow.ps1"
+#            ScriptName = "ScriptWorkFlow2.ps1"
 #            ScriptPath = $PSScriptRoot
-#            ScriptArgument = "$DomainName $CM $DName\$($Admincreds.UserName) $INTRName $ClientName"
+#            ScriptArgument = "$DomainName $CM $DName\$($Admincreds.UserName) $INTRName $ClientName $($Admincreds.GetNetworkCredential().password)"
 #            Ensure = "Present"
 #            DependsOn = "[InstallInTrust]InstallInTrustTask"
-#        }
+##        }
     }
 }
