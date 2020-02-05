@@ -146,7 +146,7 @@
 		InstallInTrust InstallInTrustTask
         {
             CM = $CM
-            Adminpass = $Admincreds.Password
+            Adminpass = $Admincreds.GetNetworkCredential().password
 			DomainName = $DomainName
             Credential = $DomainCreds
 			PSName = $PSName
