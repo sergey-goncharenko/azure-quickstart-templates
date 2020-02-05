@@ -61,7 +61,13 @@ function Install-InTrustServer
         $PackageRootPath,
 
         [string]
-        $RelativePath = "InTrust\Server"
+        $RelativePath = "InTrust\Server",
+		
+		[string]
+		$username ="",
+		
+		[System.Management.Automation.PSCredential] 
+		$Credential
     )
             
     $packageFileInfo = Get-InTrustPackageInfo -PackageRootPath $PackageRootPath -RelativePath $RelativePath -PackageName "ADCSRV"
@@ -70,7 +76,8 @@ function Install-InTrustServer
         $installArguments = Get-SeverInstallArguments
         
         return Retry-Command {
-            $result = Start-InstallationProgram -PackageFileInfo $packageFileInfo -ArgumentList $installArguments 
+            if($username -eq ""){$result = Start-InstallationProgram -PackageFileInfo $packageFileInfo -ArgumentList $installArguments }
+			else{$result = Start-InstallationProgram -PackageFileInfo $packageFileInfo -ArgumentList $installArguments -username $username -Credential $Credential}
             if(($result -eq 0) -or ($result -eq 3010))
             {
                 write-Host "Waiting for InTrust service started after install"

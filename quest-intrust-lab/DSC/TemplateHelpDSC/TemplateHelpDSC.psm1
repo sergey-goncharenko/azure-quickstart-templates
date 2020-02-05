@@ -217,6 +217,7 @@ class InstallInTrust
 		$_CM = $this.CM
 		$_SP=$this.ScriptPath
 		$usernm=$this.Credential.UserName
+		$PScreds=$this.Credential
 		$admpass=$this.AdminPass
 		$sqlsrv=$this.PSName
 		$instpsmpath="$_SP\Installation.psm1"
@@ -237,7 +238,10 @@ class InstallInTrust
 		
 		Install-VCRedist -PackageRootPath $cmsourcepath
 		Install-SQLNativeClient -PackageRootPath $cmsourcepath
-		Install-InTrustServer -PackageRootPath $cmsourcepath
+		$cmd="Install-InTrustServer -PackageRootPath $cmsourcepath -username $usernm -Credential $PScreds"
+		Install-InTrustServer -PackageRootPath $cmsourcepath -username $usernm -Credential $PScreds
+		$StatusPath = "$cmsourcepath\Installcmd.txt"
+            $cmd >> $StatusPath
 		Install-InTrustManager -PackageRootPath $cmsourcepath
 		
     }

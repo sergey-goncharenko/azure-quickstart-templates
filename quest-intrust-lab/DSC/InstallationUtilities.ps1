@@ -663,7 +663,14 @@ function Start-InstallationProgram
         $ArgumentList = "", 
         
         [string]
-        $WorkingDirectory
+        $WorkingDirectory,
+		
+		[string]
+		$username ="",
+		
+		[System.Management.Automation.PSCredential] 
+		$Credential
+		
     )
     
     $FilePath = Get-PackageExecutor -PackageFileInfo $PackageFileInfo
@@ -699,7 +706,14 @@ function Start-InstallationProgram
         $startInfo.RedirectStandardError = $true
         $startInfo.RedirectStandardOutput = $true
         $startInfo.UseShellExecute = $false
-
+		if($username -ne "")
+		{
+			$startInfo.Username = $username
+			$startInfo.Domain = $Credential.GetNetworkCredential().Domain
+            $startInfo.Password = $Credential.Password
+		}
+		
+		
         $process = [diagnostics.process]::start($startInfo)
 
         $process.BeginOutputReadLine()
