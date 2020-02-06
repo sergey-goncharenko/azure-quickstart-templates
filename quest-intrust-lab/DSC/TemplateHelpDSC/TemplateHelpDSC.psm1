@@ -227,6 +227,7 @@ class InstallInTrust
 		$creds=$usernm
 
 		$output = Invoke-Command -ScriptBlock { 
+			param($instpsmpath,$instparpsmpath,$admpass,$sqlsrv,$creds,$cmsourcepath)
 		    Import-Module $instpsmpath
 			Import-Module $instparpsmpath
 			$cmd="Initialize-EnvironmentVariables -commonPsw $admpass -sqlServer $sqlsrv -sqlReportServer $sqlsrv -serviceAccount $creds"
@@ -243,7 +244,7 @@ class InstallInTrust
 			Install-InTrustManager -PackageRootPath $cmsourcepath
 		
 		
-		} -ComputerName localhost -Credential $PScreds -Verbose
+		} -ArgumentList $instpsmpath,$instparpsmpath,$admpass,$sqlsrv,$creds,$cmsourcepath -ComputerName localhost -Credential $PScreds -Verbose
         Write-Verbose $output
 
 		
