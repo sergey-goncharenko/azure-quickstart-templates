@@ -34,6 +34,7 @@
     [System.Management.Automation.PSCredential]$DomainCreds = New-Object System.Management.Automation.PSCredential ("${DomainName}\$($Admincreds.UserName)", $Admincreds.Password)
     $PrimarySiteName = $PSName.split(".")[0] + "$"
     $INTRComputerAccount = "$DName\$INTRName$"
+	$admname = $Admincreds.UserName
 
     Node localhost
     {
@@ -122,7 +123,7 @@
         }
 
         AddUserToLocalAdminGroup AddADUserToLocalAdminGroup {
-            Name = $($Admincreds.UserName)
+            Name = $admname
             DomainName = $DomainName
             DependsOn = "[FileReadAccessShare]DomainSMBShare"
         }
