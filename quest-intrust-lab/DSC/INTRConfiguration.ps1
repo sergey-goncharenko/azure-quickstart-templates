@@ -35,6 +35,7 @@
     $PrimarySiteName = $PSName.split(".")[0] + "$"
     $INTRComputerAccount = "$DName\$INTRName$"
 	$admname = $Admincreds.UserName
+	$admpwd=$Admincreds.GetNetworkCredential().password
 
     Node localhost
     {
@@ -147,7 +148,7 @@
 		InstallInTrust InstallInTrustTask
         {
             CM = $CM
-            Adminpass = $Admincreds.GetNetworkCredential().password
+            Adminpass = $admpwd
 			DomainName = $DomainName
             Credential = $DomainCreds
 			PSName = $PSName
