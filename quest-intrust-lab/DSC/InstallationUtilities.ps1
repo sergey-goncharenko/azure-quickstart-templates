@@ -617,7 +617,8 @@ function Get-BasicInstallCmdline
     }
     elseif($PackageFileInfo.Extension -eq ".msi")
     {
-        $cmdline  = " /quiet"  
+        #$cmdline  = " /quiet"  
+		$cmdline  = " /qb"
         $cmdline += " /l*v """  + (Get-InstallLogFile $PackageFileInfo) + """"
         $cmdline += " /i """ + $PackageFileInfo.FullName + """"
     }
@@ -997,17 +998,17 @@ function Get-AdvancedSettings
 {
     $AutoDiscoverySetting = Get-DefaultAutoDiscoverySetting
 
-    $parameter += ' {0}="{1}"' -f ("AE_IGNORE_SETUSERRIGHTS_RESULT", 1)
+    #$parameter += ' {0}="{1}"' -f ("AE_IGNORE_SETUSERRIGHTS_RESULT", 1)
     $parameter += ' {0}="{1}"' -f ("IT_DEF_SETTINGS_INITIALIZED", 1)
     $parameter += ' {0}="{1}"' -f ("IT_SQL_SETTINGS_INITIALIZED", 1)
-    $parameter += ' {0}="{1}"' -f ("IT_SMTP_SETTINGS_INITIALIZED", 1)
-    $parameter += ' {0}="{1}"' -f ("IT_SRS_SETTINGS_INITIALIZED", 1)
-    $parameter += ' {0}="{1}"' -f ("IT_SRS_LOCAL_SETTINGS_INITIALIZED", 1)
+    #$parameter += ' {0}="{1}"' -f ("IT_SMTP_SETTINGS_INITIALIZED", 1)
+    #$parameter += ' {0}="{1}"' -f ("IT_SRS_SETTINGS_INITIALIZED", 1)
+    #$parameter += ' {0}="{1}"' -f ("IT_SRS_LOCAL_SETTINGS_INITIALIZED", 1)
         
     #InTrustCfgSettings = 1,InTrustSMTPSettings= 2,InTrustSRSSettings = 4
-    $parameter += ' {0}="{1}"' -f ("AE_AUTO_DISCOVERY_PAGES", $AutoDiscoverySetting)
+    #$parameter += ' {0}="{1}"' -f ("AE_AUTO_DISCOVERY_PAGES", $AutoDiscoverySetting)
 
-    $parameter += ' {0}="{1}"' -f ("REBOOT", "ReallySuppress")
+    #$parameter += ' {0}="{1}"' -f ("REBOOT", "ReallySuppress")
     
     #Participation in the Software Improvement Program,0 - do not participate. 1 - participate.
     $parameter += ' {0}="{1}"' -f ("SIP_OPTIN", "#0")
