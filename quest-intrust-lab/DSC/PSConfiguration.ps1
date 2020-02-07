@@ -147,6 +147,20 @@
             Account = $DCComputerAccount
             DependsOn = "[ChangeSQLServicesAccount]ChangeToLocalSystem"
         }
+		
+		xCredSSP Server
+        {
+            Ensure = "Present"
+            Role = "Server"
+			DependsOn = "[FileReadAccessShare]CMSourceSMBShare"
+        }
+        xCredSSP Client
+        {
+            Ensure = "Present"
+            Role = "Client"
+            DelegateComputers = $INTRName
+			DependsOn = "[FileReadAccessShare]CMSourceSMBShare"
+        }
 
         RegisterTaskScheduler InstallAndUpdateSCCM
         {
@@ -155,7 +169,7 @@
             ScriptPath = $PSScriptRoot
             ScriptArgument = "$DomainName $CM $DName\$($Admincreds.UserName) $INTRName $ClientName"
             Ensure = "Present"
-            DependsOn = "[FileReadAccessShare]CMSourceSMBShare"
+            DependsOn = "[xCredSSP]Client"
         }
     }
 }

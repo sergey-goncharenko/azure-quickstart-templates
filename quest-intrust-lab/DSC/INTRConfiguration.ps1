@@ -23,6 +23,7 @@
     )
 
     Import-DscResource -ModuleName TemplateHelpDSC
+	Import-DscResource -Module xCredSSP
 
     $LogFolder = "TempLog"
 	$CM = "IntrFull"
@@ -145,6 +146,20 @@
             DependsOn = "[AddUserToLocalAdminGroup]AddADUserToLocalAdminGroup","[AddUserToLocalAdminGroup]AddADComputerToLocalAdminGroup"
         }
 		
+		xCredSSP Server
+        {
+            Ensure = "Present"
+            Role = "Server"
+			DependsOn = "[WriteConfigurationFile]WriteINTRFinished"
+        }
+        xCredSSP Client
+        {
+            Ensure = "Present"
+            Role = "Client"
+            DelegateComputers = $PSName
+			DependsOn = "[xCredSSP]Server"
+        }
+		
 		InstallInTrust InstallInTrustTask
         {
             CM = $CM
@@ -154,7 +169,7 @@
 			PSName = $PSName
 			ScriptPath = $PSScriptRoot
             Ensure = "Present"
-            DependsOn = "[WriteConfigurationFile]WriteINTRFinished"
+            DependsOn = "[xCredSSP]Client"
         }
 		
 #		RegisterTaskScheduler InstallAndUpdateSCCM
