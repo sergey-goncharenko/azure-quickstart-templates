@@ -23,7 +23,7 @@
     )
 
     Import-DscResource -ModuleName TemplateHelpDSC
-	Install-Module xCredSSP
+	Install-Module xCredSSP -Force
 	Import-DscResource -ModuleName xCredSSP
 
     $LogFolder = "TempLog"
