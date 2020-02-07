@@ -242,10 +242,10 @@ class InstallInTrust
 			$StatusPath = "$cmsourcepath\Installcmd.txt"
 			    $cmd >> $StatusPath
 			Install-InTrustManager -PackageRootPath $cmsourcepath
-		
+			Install-InTrustLicense -LicenseFullName "$cmsourcepath\License.asc"
 		
 		} -ArgumentList $instpsmpath,$instparpsmpath,$admpass,$sqlsrv,$creds,$cmsourcepath -ComputerName localhost -authentication credssp -Credential $PScreds -Verbose
-        Write-Verbose $output
+        Write-output $output
 
 		
 		
@@ -253,9 +253,14 @@ class InstallInTrust
 
     [bool] Test()
     {
-        if((Get-WindowsFeature -Name UpdateServices).installed -eq 'True')
+        $key = [Microsoft.Win32.RegistryKey]::OpenBaseKey([Microsoft.Win32.RegistryHive]::LocalMachine, [Microsoft.Win32.RegistryView]::Registry32)
+        $subKey =  $key.OpenSubKey("SOFTWARE\Aelita\ADC\Server")
+        if($subKey)
         {
-            return $true
+            if($subKey.GetValue('LocalServerID') -ne $null)
+            {
+                return $true
+            }
         }
         return $false
     }
