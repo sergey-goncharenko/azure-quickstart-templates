@@ -244,7 +244,7 @@ class InstallInTrust
 			Install-InTrustManager -PackageRootPath $cmsourcepath
 		
 		
-		} -ArgumentList $instpsmpath,$instparpsmpath,$admpass,$sqlsrv,$creds,$cmsourcepath -ComputerName localhost -Credential $PScreds -Verbose
+		} -ArgumentList $instpsmpath,$instparpsmpath,$admpass,$sqlsrv,$creds,$cmsourcepath -ComputerName localhost -authentication credssp -Credential $PScreds -Verbose
         Write-Verbose $output
 
 		
