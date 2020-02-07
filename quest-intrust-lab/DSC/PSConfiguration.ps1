@@ -21,9 +21,9 @@
         [Parameter(Mandatory)]
         [System.Management.Automation.PSCredential]$Admincreds
     )
-	Install-Module xCredSSP -Force
+	
     Import-DscResource -ModuleName TemplateHelpDSC
-    Import-DscResource -Module xCredSSP
+	Import-DscResource -Module xCredSSP
 	
     $LogFolder = "TempLog"
     $CM = "IntrFull"
