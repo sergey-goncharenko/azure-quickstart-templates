@@ -159,7 +159,7 @@
         {
             Ensure = "Present"
             Role = "Client"
-            DelegateComputers = $INTRName
+            DelegateComputers = "$PSName, localhost, $INTRName"
 			DependsOn = "[FileReadAccessShare]CMSourceSMBShare"
         }
 

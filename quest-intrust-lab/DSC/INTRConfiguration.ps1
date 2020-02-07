@@ -156,7 +156,7 @@
         {
             Ensure = "Present"
             Role = "Client"
-            DelegateComputers = $PSName
+            DelegateComputers = "$PSName, localhost, $INTRName"
 			DependsOn = "[xCredSSP]Server"
         }
 		
