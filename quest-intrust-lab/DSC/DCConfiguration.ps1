@@ -136,21 +136,21 @@
             DependsOn = "[FileReadAccessShare]DomainSMBShare"
         }
 
-#        DelegateControl AddPS
-#        {
-#            Machine = $PSName
-#            DomainFullName = $DomainName
-#            Ensure = "Present"
-#            DependsOn = "[WriteConfigurationFile]WritePSJoinDomain"
-#        }
+ #       DelegateControl AddPS
+ #       {
+ #           Machine = $PSName
+ #           DomainFullName = $DomainName
+ #           Ensure = "Present"
+ #           DependsOn = "[WriteConfigurationFile]WritePSJoinDomain"
+ #       }
 
-#        DelegateControl AddINTR
-#        {
-#            Machine = $INTRName
-#            DomainFullName = $DomainName
-#            Ensure = "Present"
-#            DependsOn = "[WriteConfigurationFile]WriteINTRJoinDomain"
-#        }
+ #       DelegateControl AddINTR
+ #       {
+ #           Machine = $INTRName
+ #           DomainFullName = $DomainName
+ #           Ensure = "Present"
+ #           DependsOn = "[WriteConfigurationFile]WriteINTRJoinDomain"
+ #       }
 
         WriteConfigurationFile WriteDelegateControlfinished
         {
