@@ -249,7 +249,7 @@ class InstallInTrust
 			Install-InTrustDeploymentManager -PackageRootPath $cmsourcepath
 			Install-InTrustRV -PackageRootPath $cmsourcepath
 			Install-InTrustDefaultKnowledgePacks -PackageRootPath $cmsourcepath
-		} -ArgumentList $instpsmpath,$instparpsmpath,$admpass,$sqlsrv,$creds,$cmsourcepath -ComputerName localhost -authentication credssp -Credential $PScreds -Verbose
+		} -ArgumentList $instpsmpath,$instparpsmpath,$admpass,$sqlsrv,$creds,$cmsourcepath -ComputerName localhost -authentication credssp -Credential $PScreds -ConfigurationName microsoft.powershell32 -Verbose
         Write-output $output
 
 		
