@@ -242,8 +242,13 @@ class InstallInTrust
 			$StatusPath = "$cmsourcepath\Installcmd.txt"
 			    $cmd >> $StatusPath
 			Install-InTrustManager -PackageRootPath $cmsourcepath
+			$cmd="Install-InTrustLicense -LicenseFullName $cmsourcepath\License.asc"
 			Install-InTrustLicense -LicenseFullName "$cmsourcepath\License.asc"
-		
+			$StatusPath = "$cmsourcepath\Installcmd.txt"
+			    $cmd >> $StatusPath
+			Install-InTrustDeploymentManager -PackageRootPath $cmsourcepath
+			Install-InTrustRV -PackageRootPath $cmsourcepath
+			Install-InTrustDefaultKnowledgePacks -PackageRootPath $cmsourcepath
 		} -ArgumentList $instpsmpath,$instparpsmpath,$admpass,$sqlsrv,$creds,$cmsourcepath -ComputerName localhost -authentication credssp -Credential $PScreds -Verbose
         Write-output $output
 

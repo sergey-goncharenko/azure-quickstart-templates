@@ -1,0 +1,9 @@
+[ClassVersion("1.0.0.0"), FriendlyName("IntrHelpers")]
+class QSFT_IntrHelpers : OMI_BaseResource
+{
+    [Key, Description("Specifies the Managemetn Action.\nEnableCollection   \nEnableRules   \n"), ValueMap{"EnableCollection","EnableRules"}, Values{"EnableCollection","EnableRules"}] String Action;
+    [Write, Description("An enumerated value that describes if the role is expected to be enabled on the machine.\nPresent {default}  \nAbsent   \n"), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
+    [Write, Description("ActionParameters.")] String Parameters[];
+    [Write, Description("Specifies if a reboot should be supressed. Default is False")] Boolean SuppressReboot;
+};
+
