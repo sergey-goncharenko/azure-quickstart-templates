@@ -246,6 +246,9 @@ class InstallInTrust
 			Install-InTrustDeploymentManager -PackageRootPath $cmsourcepath
 			Install-InTrustRV -PackageRootPath $cmsourcepath
 			Install-InTrustDefaultKnowledgePacks -PackageRootPath $cmsourcepath
+			
+			Start-Process -Filepath ("$cmsourcepath\Update.exe") -ArgumentList (' /Q') -wait
+			
 			$cmd="Install-InTrustLicense -LicenseFullName $cmsourcepath\License.asc"
 			Install-InTrustLicense -LicenseFullName "$cmsourcepath\License.asc"
 			$StatusPath = "$cmsourcepath\Installcmd.txt"
@@ -632,6 +635,9 @@ class DownloadSCCM
     [string] $IntrUrl
 
 	[DscProperty(Key)]
+    [string] $IntrUpdateUrl
+
+	[DscProperty(Key)]
     [string] $IntrLicUrl
 
     [DscProperty(Mandatory)]
@@ -650,11 +656,14 @@ class DownloadSCCM
         Write-Verbose "Downloading InTrust installation source..."
         $cmurl = $this.IntrUrl
 		$cmlicurl = $this.IntrLicUrl
+		$cmupdateurl = $this.IntrUpdateUrl
         Invoke-WebRequest -Uri $cmurl -OutFile $cmpath
         if(!(Test-Path $cmsourcepath))
         {
             Start-Process -Filepath ($cmpath) -ArgumentList ('-y -o"' + $cmsourcepath + '"') -wait
         }
+		$cmupdatepath = "$cmsourcepath\Update.exe"
+		Invoke-WebRequest -Uri $cmupdateurl -OutFile $cmupdatepath
 		$cmlicpath = "$cmsourcepath\License.asc"
 		Invoke-WebRequest -Uri $cmlicurl -OutFile $cmlicpath
     }

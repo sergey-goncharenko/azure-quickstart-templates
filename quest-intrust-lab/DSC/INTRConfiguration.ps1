@@ -14,6 +14,8 @@
         [String]$PSName,
 		[Parameter(Mandatory)]
 		[String]$IntrUrl,
+		[Parameter(Mandatory)]
+		[String]$IntrUpdateUrl,
         [Parameter(Mandatory)]
 		[String]$IntrLicUrl,
         [Parameter(Mandatory)]
@@ -59,6 +61,7 @@
             CM = $CM
             ExtPath = $LogPath
 			IntrUrl= $IntrUrl
+			IntrUpdateUrl= $IntrUpdateUrl
 			IntrLicUrl= $IntrLicUrl
             Ensure = "Present"
             DependsOn = "[SetCustomPagingFile]PagingSettings"

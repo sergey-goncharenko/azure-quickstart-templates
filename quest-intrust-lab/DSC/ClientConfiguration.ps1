@@ -14,6 +14,8 @@
         [String]$PSName,
 		[Parameter(Mandatory)]
 		[String]$IntrUrl,
+		[Parameter(Mandatory)]
+		[String]$IntrUpdateUrl,
         [Parameter(Mandatory)]
 		[String]$IntrLicUrl,
         [Parameter(Mandatory)]

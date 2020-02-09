@@ -32,6 +32,13 @@
         "description": "URL to download InTrust"
       }
     },
+	"IntrUpdate": {
+      "type": "string",
+      "minLength": 8,
+      "metadata": {
+        "description": "URL to download InTrust Update"
+      }
+    },
 	"IntrLic": {
       "type": "string",
       "minLength": 8,
@@ -215,6 +222,7 @@
             "ClientName": "[concat(parameters('prefix'),variables('vmname')[2])]",
             "PSName": "[concat(parameters('prefix'),variables('vmname')[3])]",
 			"IntrUrl": "[parameters('IntrPackage')]",
+			"IntrUpdateUrl": "[parameters('IntrUpdate')]",
 			"IntrLicUrl": "[parameters('IntrLic')]",
             "DNSIPAddress": "[concat(variables('networkSettings').virtualMachinesIPAddress,add(int('0'),int('4')))]",
             "AdminCreds": {
