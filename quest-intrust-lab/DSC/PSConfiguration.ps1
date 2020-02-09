@@ -76,6 +76,7 @@
             CM = $CM
             ExtPath = $LogPath
 			IntrUrl= $IntrUrl
+			IntrUpdateUrl= $IntrUpdateUrl
 			IntrLicUrl= $IntrLicUrl
             Ensure = "Present"
             DependsOn = "[InstallFeatureForSCCM]InstallFeature"
