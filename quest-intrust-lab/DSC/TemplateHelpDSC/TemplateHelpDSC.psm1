@@ -264,7 +264,7 @@ class InstallInTrust
 					$collection.RepositoryId = $cfgBrowser.Configuration.DataStorages.GetDefaultRepository().Guid
 					$rtcSite = $cfgBrowser.Configuration.Sites.AddRtcSite($currentName)
 					$collection.AddSiteReference($rtcSite.Guid)
-					$rtcSite.AddDomain([Guid]::NewGuid(),$env:USERDNSDOMAIN,$false,$false)
+					$rtcSite.AddDomain([Guid]::NewGuid(),$env:USERDNSDOMAIN,$false)
 					$rtcSite.OwnerServerId = $cfgBrowser.GetServer().Guid
 					$rtcSite.Update()
 					$cfgBrowser.Configuration.DataSources.ListDataSources() | ?{$_.ProviderID -eq 'a9e5c7a2-5c01-41b7-9d36-e562dfddefa9'} | %{$collection.AddDataSourceReference($_.Guid)}
