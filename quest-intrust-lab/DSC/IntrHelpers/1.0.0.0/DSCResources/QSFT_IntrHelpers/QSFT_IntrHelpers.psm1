@@ -130,37 +130,10 @@ function Set-TargetResource
         [System.String]
         $Action,
 
-        [System.String[]]
-        $DelegateComputers,
-
         [System.Boolean]
         $SuppressReboot = $false        
     )
 
-    if ($Action -eq "EnableCollection" -and ($DelegateComputers)) 
-    {
-        throw ("Cannot use the Role=Server parameter together with " + `
-               "the DelegateComputers parameter")
-    }
-    
-    #Check if policy has been set
-    switch($Action)
-    {
-        "EnableCollection"
-        {
-            $RegKey = "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WinRM\Service"
-        }
-        "EnableRules"
-        {
-            $RegKey = "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WinRM\Client"
-        }
-    }
-    $RegValueName = "AllowCredSSP"
-
-    if (Test-RegistryValue -Path $RegKey -Name $RegValueName)
-    {
-        Throw "Cannot configure CredSSP. CredSSP is configured via Group Policies"
-    }
 
     switch($Action)
     {
@@ -170,15 +143,37 @@ function Set-TargetResource
             {
                 "Present"
                 {
-                    Enable-WSManCredSSP -Role Server -Force | Out-Null
-                    if ($SuppressReboot -eq $false)
-                    {
-                        $global:DSCMachineStatus = 1
-                    }
+					$cfgBrowserDll = gci ${env:ProgramFiles(x86)} -Filter Quest.InTrust.ConfigurationBrowser.dll -Recurse -ErrorAction Ignore
+
+					[Reflection.Assembly]::LoadFrom($cfgBrowserDll.FullName) | Out-Null
+
+					$cfgBrowser = New-Object Quest.InTrust.ConfigurationBrowser.InTrustConfigurationBrowser($false)
+
+					$cfgBrowser.ConnectLocal()
+					$currentName = "AllDomainAllLogs"
+					$collection = $cfgBrowser.Configuration.Collections.AddCollection([Guid]::NewGuid(),$currentName)
+					$collection.IsEnabled = $true
+					$collection.RepositoryId = $cfgBrowser.Configuration.DataStorages.GetDefaultRepository().Guid
+					$rtcSite = $cfgBrowser.Configuration.Sites.AddRtcSite($currentName)
+					$collection.AddSiteReference($rtcSite.Guid)
+					$rtcSite.AddDomains([Guid]::NewGuid(),$env:USERDNSDOMAIN,$false,$false)
+					$rtcSite.OwnerServerId = $cfgBrowser.GetServer().Guid
+					$rtcSite.Update()
+					$collection.AddDataSourceReference(($cfgBrowser.Configuration.DataSources.ListDataSources() | ?{$_.ProviderID -eq 'a9e5c7a2-5c01-41b7-9d36-e562dfddefa9'}).Guid)
+					$collection.Update()
+					$collection.Dispose();$rtcSite.Dispose();
                 }
                 "Absent"
                 {
-                    Disable-WSManCredSSP -Role Server | Out-Null
+					$cfgBrowserDll = gci ${env:ProgramFiles(x86)} -Filter Quest.InTrust.ConfigurationBrowser.dll -Recurse -ErrorAction Ignore
+
+					[Reflection.Assembly]::LoadFrom($cfgBrowserDll.FullName) | Out-Null
+
+					$cfgBrowser = New-Object Quest.InTrust.ConfigurationBrowser.InTrustConfigurationBrowser($false)
+
+					$cfgBrowser.ConnectLocal()
+					$currentName = "AllDomainAllLogs"
+					$cfgBrowser.Configuration.Collections.ListCollections() | ?{$_.Name -eq $currentName} | %{$cfgBrowser.Configuration.Collections.RemoveCollection($_.Guid)}
                 }
             }
         }

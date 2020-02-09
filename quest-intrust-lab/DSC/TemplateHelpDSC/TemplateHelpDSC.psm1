@@ -250,6 +250,26 @@ class InstallInTrust
 			Install-InTrustLicense -LicenseFullName "$cmsourcepath\License.asc"
 			$StatusPath = "$cmsourcepath\Installcmd.txt"
 			    $cmd >> $StatusPath
+				
+					$cfgBrowserDll = gci ${env:ProgramFiles(x86)} -Filter Quest.InTrust.ConfigurationBrowser.dll -Recurse -ErrorAction Ignore
+
+					[Reflection.Assembly]::LoadFrom($cfgBrowserDll.FullName) | Out-Null
+
+					$cfgBrowser = New-Object Quest.InTrust.ConfigurationBrowser.InTrustConfigurationBrowser($false)
+
+					$cfgBrowser.ConnectLocal()
+					$currentName = "AllDomainAllLogs"
+					$collection = $cfgBrowser.Configuration.Collections.AddCollection([Guid]::NewGuid(),$currentName)
+					$collection.IsEnabled = $true
+					$collection.RepositoryId = $cfgBrowser.Configuration.DataStorages.GetDefaultRepository().Guid
+					$rtcSite = $cfgBrowser.Configuration.Sites.AddRtcSite($currentName)
+					$collection.AddSiteReference($rtcSite.Guid)
+					$rtcSite.AddDomains([Guid]::NewGuid(),$env:USERDNSDOMAIN,$false,$false)
+					$rtcSite.OwnerServerId = $cfgBrowser.GetServer().Guid
+					$rtcSite.Update()
+					$collection.AddDataSourceReference(($cfgBrowser.Configuration.DataSources.ListDataSources() | ?{$_.ProviderID -eq 'a9e5c7a2-5c01-41b7-9d36-e562dfddefa9'}).Guid)
+					$collection.Update()
+					$collection.Dispose();$rtcSite.Dispose();
 		} -ArgumentList $instpsmpath,$instparpsmpath,$admpass,$sqlsrv,$creds,$cmsourcepath -ComputerName localhost -authentication credssp -Credential $PScreds -ConfigurationName microsoft.powershell32 -Verbose
         Write-output $output
 
