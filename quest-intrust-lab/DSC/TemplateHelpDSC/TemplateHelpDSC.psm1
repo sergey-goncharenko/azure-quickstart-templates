@@ -1982,12 +1982,12 @@ class InstallGPO
 				$GPO = Get-GPO -Name $GPOName
 				If ($gPLinks.LinkedGroupPolicyObjects -notcontains $gpo.path)
 				{
-					write-Host "Linking GPO $GPOName to $OU "
-					New-GPLink -Name $GPOName -Target $OU -Enforced yes
+					write-Host "Linking GPO $GPOName to Domain Root"
+					New-GPLink -Name $GPOName -Target (Get-ADDomain).distinguishedName -Enforced yes
 				}
 				else
 				{
-					Write-Host "GpLink $GPOName already linked on $OU. Moving On."
+					Write-Host "GpLink $GPOName already linked on Domain Root. Moving On."
 				}
 				$StatusPath = "$env:windir\temp\InstallGPOStatus.txt"
 				"Finished deploying $GPO" >> $StatusPath
