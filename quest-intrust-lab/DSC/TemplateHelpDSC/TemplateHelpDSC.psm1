@@ -2018,7 +2018,7 @@ class InstallGPO
         return $false
     }
 
-    [InstallCA] Get()
+    [InstallGPO] Get()
     {
         return $this
     }
