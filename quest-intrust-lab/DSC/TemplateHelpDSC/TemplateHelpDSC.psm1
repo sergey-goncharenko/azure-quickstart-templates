@@ -1957,7 +1957,7 @@ class InstallGPO
 			$DomainName1,$DomainName2 = $DDNSName.split('.')
 			$GPOlink=$this.GPOURL
 			$OutputFile = Split-Path $GPOlink -leaf
-			$ZipFile = "c:\cfn\scripts\$outputFile"
+			$ZipFile = "c:\$outputFile"
 
 			# Download Zipped File
 			$wc = new-object System.Net.WebClient
@@ -1966,17 +1966,11 @@ class InstallGPO
 
 			# Unzip file
 			$file = (Get-Item $ZipFile).Basename
-			expand-archive -path $Zipfile -DestinationPath "c:\cfn\scripts\"
-			if (!(Test-Path "c:\cfn\scripts\$file"))
-			{
-				write-Host "$ZipFile could not be decompressed successfully.. "
-				break
-			}
+			expand-archive -path $Zipfile -DestinationPath "c:\GPO\"
 
-			$GPOFolder = "c:\cfn\scripts\$file"
+			$GPOFolder = "c:\GPO\"
 			$GPOLocations = Get-ChildItem $GPOFolder | ForEach-Object {$_.BaseName}
-			$OU = "DC=$DomainName1,DC=$DomainName2"
-			
+						
 			foreach($GPO in $GPOLocations)
 			{
 				$GPOName = $GPO.Replace("_"," ")
@@ -1984,7 +1978,7 @@ class InstallGPO
 				Import-GPO -BackupGpoName $GPOName -Path "$GPOFolder\$GPO" -TargetName $GPOName -CreateIfNeeded
 
 				$gpLinks = $null
-				$gPLinks = Get-ADOrganizationalUnit -Identity $OU -Properties name,distinguishedName, gPLink, gPOptions
+				$gPLinks = Get-ADObject -Identity (Get-ADDomain).distinguishedName -Properties name,distinguishedName, gPLink, gPOptions
 				$GPO = Get-GPO -Name $GPOName
 				If ($gPLinks.LinkedGroupPolicyObjects -notcontains $gpo.path)
 				{
