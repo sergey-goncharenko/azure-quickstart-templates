@@ -19,6 +19,8 @@
         [Parameter(Mandatory)]
 		[String]$IntrLicUrl,
         [Parameter(Mandatory)]
+		[String]$GPOURL,
+        [Parameter(Mandatory)]
         [String]$DNSIPAddress,
         [Parameter(Mandatory)]
         [System.Management.Automation.PSCredential]$Admincreds
@@ -70,26 +72,33 @@
             HashAlgorithm = "SHA256"
             DependsOn = "[SetupDomain]FirstDS"
         }
+		
+		InstallGPO DeployingAuditGPO
+        {
+            GPOURL = $GPOURL
+			DomainDNSName = $DomainName
+            DependsOn = "[InstallCA]InstallCA"
+        }
 
         VerifyComputerJoinDomain WaitForPS
         {
             ComputerName = $PSName
             Ensure = "Present"
-            DependsOn = "[InstallCA]InstallCA"
+            DependsOn = "[InstallGPO]DeployingAuditGPO"
         }
 
         VerifyComputerJoinDomain WaitForINTR
         {
             ComputerName = $INTRName
             Ensure = "Present"
-            DependsOn = "[InstallCA]InstallCA"
+            DependsOn = "[InstallGPO]DeployingAuditGPO"
         }
 
         VerifyComputerJoinDomain WaitForClient
         {
             ComputerName = $ClientName
             Ensure = "Present"
-            DependsOn = "[InstallCA]InstallCA"
+            DependsOn = "[InstallGPO]DeployingAuditGPO"
         }
 
         File ShareFolder
@@ -137,6 +146,8 @@
             Ensure = "Present"
             DependsOn = "[FileReadAccessShare]DomainSMBShare"
         }
+		
+
 
  #       DelegateControl AddPS
  #       {

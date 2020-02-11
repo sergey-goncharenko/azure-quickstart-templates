@@ -46,6 +46,13 @@
         "description": "URL to download InTrust license"
       }
     },
+	"GPOURL": {
+      "type": "string",
+      "minLength": 8,
+      "metadata": {
+        "description": "URL to download and deploy GPO in domain"
+      }
+    },
     "_artifactsLocation": {
       "type": "string",
       "metadata": {
@@ -224,6 +231,7 @@
 			"IntrUrl": "[parameters('IntrPackage')]",
 			"IntrUpdateUrl": "[parameters('IntrUpdate')]",
 			"IntrLicUrl": "[parameters('IntrLic')]",
+			"GPOURL": "[parameters('GPOURL')]",
             "DNSIPAddress": "[concat(variables('networkSettings').virtualMachinesIPAddress,add(int('0'),int('4')))]",
             "AdminCreds": {
               "UserName": "[parameters('adminUsername')]",

@@ -31,7 +31,8 @@ DscResourcesToExport = @(
     'SetCustomPagingFile',
     'SetupDomain',
     'FileReadAccessShare',
-    'InstallCA'
+    'InstallCA',
+	'InstallGPO'
 )
 
 # Version number of this module.

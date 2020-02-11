@@ -270,7 +270,7 @@ class InstallInTrust
 					$rtcSite.AddDomain([Guid]::NewGuid(),$env:USERDNSDOMAIN,$false)
 					$rtcSite.OwnerServerId = $cfgBrowser.GetServer().Guid
 					$rtcSite.Update()
-					$cfgBrowser.Configuration.DataSources.ListDataSources() | ?{$_.ProviderID -eq 'a9e5c7a2-5c01-41b7-9d36-e562dfddefa9'} | %{$collection.AddDataSourceReference($_.Guid)}
+					$cfgBrowser.Configuration.DataSources.ListDataSources() | ?{$_.ProviderID -eq 'a9e5c7a2-5c01-41b7-9d36-e562dfddefa9' -and $_.Name -notlike "*Change Auditor*" -and $_.Name -notlike "*Active Roles*"} | %{$collection.AddDataSourceReference($_.Guid)}
 					$collection.Update()
 					$collection.Dispose();$rtcSite.Dispose();
 		} -ArgumentList $instpsmpath,$instparpsmpath,$admpass,$sqlsrv,$creds,$cmsourcepath -ComputerName localhost -authentication credssp -Credential $PScreds -ConfigurationName microsoft.powershell32 -Verbose
@@ -1934,6 +1934,91 @@ class FileReadAccessShare
     }
 
     [FileReadAccessShare] Get()
+    {
+        return $this
+    }
+    
+}
+
+[DscResource()]
+class InstallGPO
+{
+    [DscProperty(Key)]
+    [string] $GPOURL
+	
+	[DscProperty(Key)]
+    [string] $DomainDNSName
+
+    [void] Set()
+    {
+        try
+        {
+			$DomainName1,$DomainName2 = $DomainDNSName.split('.')
+
+			$OutputFile = Split-Path $GPOUrl -leaf
+			$ZipFile = "c:\cfn\scripts\$outputFile"
+
+			# Download Zipped File
+			$wc = new-object System.Net.WebClient
+			$wc.DownloadFile($GPOUrl, $ZipFile)
+
+
+			# Unzip file
+			$file = (Get-Item $ZipFile).Basename
+			expand-archive -path $Zipfile -DestinationPath "c:\cfn\scripts\"
+			if (!(Test-Path "c:\cfn\scripts\$file"))
+			{
+				write-Host "$ZipFile could not be decompressed successfully.. "
+				break
+			}
+
+			$GPOFolder = "c:\cfn\scripts\$file"
+			$GPOLocations = Get-ChildItem $GPOFolder | ForEach-Object {$_.BaseName}
+			$OU = "DC=$DomainName1,DC=$DomainName2"
+			
+			foreach($GPO in $GPOLocations)
+			{
+				$GPOName = $GPO.Replace("_"," ")
+				write-Host "Creating GPO named: $GPOName "
+				Import-GPO -BackupGpoName $GPOName -Path "$GPOFolder\$GPO" -TargetName $GPOName -CreateIfNeeded
+
+				$gpLinks = $null
+				$gPLinks = Get-ADOrganizationalUnit -Identity $OU -Properties name,distinguishedName, gPLink, gPOptions
+				$GPO = Get-GPO -Name $GPOName
+				If ($gPLinks.LinkedGroupPolicyObjects -notcontains $gpo.path)
+				{
+					write-Host "Linking GPO $GPOName to $OU "
+					New-GPLink -Name $GPOName -Target $OU -Enforced yes
+				}
+				else
+				{
+					Write-Host "GpLink $GPOName already linked on $OU. Moving On."
+				}
+				$StatusPath = "$env:windir\temp\InstallGPOStatus.txt"
+				"Finished deploying $GPO" >> $StatusPath
+			}
+            Write-Verbose "Finished deploying GPO."
+
+
+        }
+        catch
+        {
+            Write-Verbose "Failed to deploy GPO."
+        }
+    }
+
+    [bool] Test()
+    {
+        $StatusPath = "$env:windir\temp\InstallGPOStatus.txt"
+        if(Test-Path $StatusPath)
+        {
+            return $true
+        }
+
+        return $false
+    }
+
+    [InstallCA] Get()
     {
         return $this
     }

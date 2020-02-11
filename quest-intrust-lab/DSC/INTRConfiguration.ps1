@@ -18,6 +18,8 @@
 		[String]$IntrUpdateUrl,
         [Parameter(Mandatory)]
 		[String]$IntrLicUrl,
+		[Parameter(Mandatory)]
+		[String]$GPOURL,
         [Parameter(Mandatory)]
         [String]$DNSIPAddress,
         [Parameter(Mandatory)]
