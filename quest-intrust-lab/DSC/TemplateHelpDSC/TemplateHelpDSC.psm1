@@ -1953,8 +1953,9 @@ class InstallGPO
     {
         try
         {
+			$DomainDNSName=$this.DomainDNSName
 			$DomainName1,$DomainName2 = $DomainDNSName.split('.')
-
+			$GPOUrl=$this.GPOURL
 			$OutputFile = Split-Path $GPOUrl -leaf
 			$ZipFile = "c:\cfn\scripts\$outputFile"
 
