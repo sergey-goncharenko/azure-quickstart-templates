@@ -1953,15 +1953,15 @@ class InstallGPO
     {
         try
         {
-			$DomainDNSName=$this.DomainDNSName
-			$DomainName1,$DomainName2 = $DomainDNSName.split('.')
-			$GPOUrl=$this.GPOURL
-			$OutputFile = Split-Path $GPOUrl -leaf
+			$DDNSName=$this.DomainDNSName
+			$DomainName1,$DomainName2 = $DDNSName.split('.')
+			$GPOlink=$this.GPOURL
+			$OutputFile = Split-Path $GPOlink -leaf
 			$ZipFile = "c:\cfn\scripts\$outputFile"
 
 			# Download Zipped File
 			$wc = new-object System.Net.WebClient
-			$wc.DownloadFile($GPOUrl, $ZipFile)
+			$wc.DownloadFile($GPOlink, $ZipFile)
 
 
 			# Unzip file
