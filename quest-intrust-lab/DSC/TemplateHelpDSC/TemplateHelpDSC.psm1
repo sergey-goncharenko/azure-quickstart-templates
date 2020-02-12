@@ -248,7 +248,10 @@ class InstallInTrust
 			Install-InTrustDefaultKnowledgePacks -PackageRootPath $cmsourcepath
 			
 			Start-Process -Filepath ("$cmsourcepath\Update.exe") -ArgumentList (' /Q') -wait
-			Start-Process -Filepath ("$_SP\NotifyThroughEventLog.exe") -ArgumentList (' -v') -wait
+			#$cmd="Start-Process -Filepath ($_SP\NotifyThroughEventLog.exe) -ArgumentList (' -v') -wait"
+			#$StatusPath = "$cmsourcepath\Installcmd.txt"
+			#$cmd >> $StatusPath
+			#Start-Process -Filepath ("$_SP\NotifyThroughEventLog.exe") -ArgumentList (' -v') -wait
 			
 			$cmd="Install-InTrustLicense -LicenseFullName $cmsourcepath\License.asc"
 			Install-InTrustLicense -LicenseFullName "$cmsourcepath\License.asc"
@@ -274,6 +277,31 @@ class InstallInTrust
 					$cfgBrowser.Configuration.DataSources.ListDataSources() | ?{$_.ProviderID -eq 'a9e5c7a2-5c01-41b7-9d36-e562dfddefa9' -and $_.Name -notlike "*Change Auditor*" -and $_.Name -notlike "*Active Roles*"} | %{$collection.AddDataSourceReference($_.Guid)}
 					$collection.Update()
 					$collection.Dispose();$rtcSite.Dispose();
+					
+					$site = $cfgBrowser.Configuration.Sites.ListSites() | ? {$_.Name -like "All Windows servers"}
+
+					$site.AddDomain([Guid]::NewGuid(),"contoso.com",$false)
+					$site.Update() 
+					
+					
+					$_Policies = $cfgBrowser.Configuration.Children["ITRTPolicies"].Children
+
+					foreach($_Policy in $_Policies)
+					{
+						$notifications = $_Policy.Properties["Notifications"].Value
+						$notification = $notifications.Add("ITRTNotification",$false)
+     
+						$notification.Properties["NotificationType"].Value = "{976ACA10-0476-4288-A96E-BCC8D0A4D154}"      
+						$notification.Properties["Enabled"].Value = 1
+						$op=$cfgBrowser.Configuration.Children["ADCNotificationOperators"].Children | ?{$_.Name -eq "Event Log Recipient"}
+						$recipient = $notification.Properties["Recipients"].Value.Add("ITRTNotificationRecipient",$false)
+						$recipient.Properties["RecipientGuid"].Value = $op.Guid.ToString("B")
+						$recipient.Update()
+
+						$notification.Update()
+					}
+					Enable-Policy -PolicyName "Windows/AD Security: full" -Yes
+					Enable-Rule -RuleName "Suspicious process was started (Security log on Windows 10 / Windows Server 2016 and later)" -Yes
 		} -ArgumentList $instpsmpath,$instparpsmpath,$admpass,$sqlsrv,$creds,$cmsourcepath,$_SP -ComputerName localhost -authentication credssp -Credential $PScreds -ConfigurationName microsoft.powershell32 -Verbose
         Write-output $output
 

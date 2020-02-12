@@ -559,6 +559,138 @@ function Install-InTrustLicense
     return 0
 }
 
+function Find-RuleByName
+{
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [ValidateNotNullOrEmpty()]
+        [String]
+        $Name,
+        
+        [Quest.InTrust.ConfigurationBrowser.InTrustObject]
+        $Group
+    )
+
+					$cfgBrowserDll = gci ${env:ProgramFiles(x86)} -Filter Quest.InTrust.ConfigurationBrowser.dll -Recurse -ErrorAction Ignore
+
+					[Reflection.Assembly]::LoadFrom($cfgBrowserDll.FullName) | Out-Null
+
+					$cfgBrowser = New-Object Quest.InTrust.ConfigurationBrowser.InTrustConfigurationBrowser($false)
+
+					$cfgBrowser.ConnectLocal()
+
+
+
+    if($Group -eq $null)
+    {
+        $parentGroup = $cfgBrowser.Configuration.Children["ITRTProcessingRuleGroups"]
+    }
+    else
+    {
+        $parentGroup = $Group
+    }
+
+    foreach($rule in $parentGroup.Properties["Rules"].Value)
+    {
+        if($rule.Name -match [regex]::escape("$Name")) 
+        {
+            return $rule
+        }
+    }
+
+    foreach($child in $parentGroup.Children) 
+    {
+        $ruleInChild = Find-RuleByName -Name "$Name" -Group $child
+        if ($ruleInChild) 
+        {
+            return $ruleInChild 
+        }
+    }
+}
+
+function  Enable-Rule
+{
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [ValidateNotNullOrEmpty()]
+        [string]
+        $RuleName,
+        
+        [parameter(parametersetname="Enable")]
+        [switch]
+        $Yes,
+        
+        [parameter(parametersetname="Disable")]
+        [switch]
+        $No
+    )
+					$cfgBrowserDll = gci ${env:ProgramFiles(x86)} -Filter Quest.InTrust.ConfigurationBrowser.dll -Recurse -ErrorAction Ignore
+
+					[Reflection.Assembly]::LoadFrom($cfgBrowserDll.FullName) | Out-Null
+
+					$cfgBrowser = New-Object Quest.InTrust.ConfigurationBrowser.InTrustConfigurationBrowser($false)
+
+					$cfgBrowser.ConnectLocal()
+	
+
+
+    $_Rule = Find-RuleByName -Name "$RuleName" -Group $cfgBrowser.Configuration.Children["ITRTProcessingRuleGroups"]
+
+    $switchStatus = {param($rule,$status) $rule.Properties["Enabled"].Value = $status; $rule.Update() }
+
+
+    if($Yes)
+    {
+        $_Rule | %{ Invoke-Command $switchStatus -ArgumentList $_,1 }
+    }
+    else
+    {
+        $_Rule | %{ Invoke-Command $switchStatus -ArgumentList $_,0 }
+    }
+
+}
+
+function Enable-Policy
+{
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [ValidateNotNullOrEmpty()]
+        [string]
+        $PolicyName,
+        
+        [parameter(parametersetname="Enable")]
+        [switch]
+        $Yes,
+        
+        [parameter(parametersetname="Disable")]
+        [switch]
+        $No
+    )
+					$cfgBrowserDll = gci ${env:ProgramFiles(x86)} -Filter Quest.InTrust.ConfigurationBrowser.dll -Recurse -ErrorAction Ignore
+
+					[Reflection.Assembly]::LoadFrom($cfgBrowserDll.FullName) | Out-Null
+
+					$cfgBrowser = New-Object Quest.InTrust.ConfigurationBrowser.InTrustConfigurationBrowser($false)
+
+					$cfgBrowser.ConnectLocal()
+
+    $_Policy = $cfgBrowser.Configuration.Children["ITRTPolicies"].Children.Item("$PolicyName")
+
+    $switchStatus = {param($policy,$status) $policy.Properties["Enabled"].Value = $status; $policy.Update() }
+
+
+    if($Yes)
+    {
+        $_Policy | %{ Invoke-Command $switchStatus -ArgumentList $_,1 }
+    }
+    else
+    {
+        $_Policy | %{ Invoke-Command $switchStatus -ArgumentList $_,0 }
+    }
+}
 
 Export-ModuleMember Install-VCRedist,
                     Install-SQLNativeClient,
@@ -582,5 +714,8 @@ Export-ModuleMember Install-VCRedist,
                     Install-InTrustWindowsAgent,
                     Install-InTrustPackage,
                     Install-InTrustLicense,
+					Find-RuleByName,
+					Enable-Rule,
+					Enable-Policy,
                     Stop-LocalInTrustProcesses,
 					Start-LocalServicesInTrustDependsOn
