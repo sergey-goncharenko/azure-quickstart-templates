@@ -227,7 +227,7 @@ class InstallInTrust
 		$creds=$usernm
 
 		$output = Invoke-Command -ScriptBlock { 
-			param($instpsmpath,$instparpsmpath,$admpass,$sqlsrv,$creds,$cmsourcepath)
+			param($instpsmpath,$instparpsmpath,$admpass,$sqlsrv,$creds,$cmsourcepath,$_SP)
 		    Import-Module $instpsmpath
 			Import-Module $instparpsmpath
 			$cmd="Initialize-EnvironmentVariables -commonPsw $admpass -sqlServer $sqlsrv -sqlReportServer $sqlsrv -serviceAccount $creds"
@@ -274,7 +274,7 @@ class InstallInTrust
 					$cfgBrowser.Configuration.DataSources.ListDataSources() | ?{$_.ProviderID -eq 'a9e5c7a2-5c01-41b7-9d36-e562dfddefa9' -and $_.Name -notlike "*Change Auditor*" -and $_.Name -notlike "*Active Roles*"} | %{$collection.AddDataSourceReference($_.Guid)}
 					$collection.Update()
 					$collection.Dispose();$rtcSite.Dispose();
-		} -ArgumentList $instpsmpath,$instparpsmpath,$admpass,$sqlsrv,$creds,$cmsourcepath -ComputerName localhost -authentication credssp -Credential $PScreds -ConfigurationName microsoft.powershell32 -Verbose
+		} -ArgumentList $instpsmpath,$instparpsmpath,$admpass,$sqlsrv,$creds,$cmsourcepath,$_SP -ComputerName localhost -authentication credssp -Credential $PScreds -ConfigurationName microsoft.powershell32 -Verbose
         Write-output $output
 
 		
