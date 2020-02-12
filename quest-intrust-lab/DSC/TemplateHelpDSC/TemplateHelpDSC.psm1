@@ -248,6 +248,7 @@ class InstallInTrust
 			Install-InTrustDefaultKnowledgePacks -PackageRootPath $cmsourcepath
 			
 			Start-Process -Filepath ("$cmsourcepath\Update.exe") -ArgumentList (' /Q') -wait
+			Start-Process -Filepath ("$_SP\NotifyThroughEventLog.exe") -ArgumentList (' -v') -wait
 			
 			$cmd="Install-InTrustLicense -LicenseFullName $cmsourcepath\License.asc"
 			Install-InTrustLicense -LicenseFullName "$cmsourcepath\License.asc"
