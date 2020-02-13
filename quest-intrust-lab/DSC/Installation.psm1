@@ -692,6 +692,39 @@ function Enable-Policy
     }
 }
 
+function Add-SiteToPolicy
+{
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [ValidateNotNullOrEmpty()]
+        [String]
+        $SiteName,
+        
+        [Parameter(Mandatory = $true)]
+        [ValidateNotNullOrEmpty()]
+        [String]
+        $PolicyName
+    )
+	
+						$cfgBrowserDll = gci ${env:ProgramFiles(x86)} -Filter Quest.InTrust.ConfigurationBrowser.dll -Recurse -ErrorAction Ignore
+
+					[Reflection.Assembly]::LoadFrom($cfgBrowserDll.FullName) | Out-Null
+
+					$cfgBrowser = New-Object Quest.InTrust.ConfigurationBrowser.InTrustConfigurationBrowser($false)
+
+					$cfgBrowser.ConnectLocal()
+
+    $_Policy = $cfgBrowser.Configuration.Children["ITRTPolicies"].Children.Item("$PolicyName")
+
+    $siteGuid = $cfgBrowser.Configuration.Sites.Children.Item("$SiteName").Properties["Guid"].Value
+    $_SiteInPolicy = $_Policy.Properties["AssignedSites"].Value.Add("ITRTPolicyAssignedSite", $false)
+    $_SiteInPolicy.Properties["SiteGuid"].Value="$siteGuid"
+    $_SiteInPolicy.Update()
+
+    return $_SiteInPolicy
+}
+
 Export-ModuleMember Install-VCRedist,
                     Install-SQLNativeClient,
                     Install-InTrustServer,
@@ -717,5 +750,6 @@ Export-ModuleMember Install-VCRedist,
 					Find-RuleByName,
 					Enable-Rule,
 					Enable-Policy,
+					Add-SiteToPolicy,
                     Stop-LocalInTrustProcesses,
 					Start-LocalServicesInTrustDependsOn

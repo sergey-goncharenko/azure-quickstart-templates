@@ -324,7 +324,10 @@ class InstallInTrust
 
 					$site.AddDomain([Guid]::NewGuid(),"contoso.com",$false)
 					$site.Update() 
-					
+					$site = $cfgBrowser.Configuration.Sites.ListSites() | ? {$_.Name -like "All workstations"}
+
+					$site.AddDomain([Guid]::NewGuid(),"contoso.com",$false)
+					$site.Update() 
 					
 					$_Policies = $cfgBrowser.Configuration.Children["ITRTPolicies"].Children
 
@@ -344,7 +347,7 @@ class InstallInTrust
 					}
 					$rulegroup1=$cfgBrowser.Configuration.Children["ITRTProcessingRuleGroups"].Children | ?{$_.Name -like "Windows*"}
 					$rulegroup2=($cfgBrowser.Configuration.Children["ITRTProcessingRuleGroups"].Children | ?{$_.Name -like "Advanced*"}).Children | ?{$_.Name -like "Windows*"}
-
+					Add-SiteToPolicy -SiteName "All workstations" -PolicyName "Windows/AD Security: full"
 					Enable-Policy -PolicyName "Windows/AD Security: full" -Yes
 					List-Rules -Group $rulegroup1 | %{Enable-Rule -RuleName $_.Name -Yes}
 					List-Rules -Group $rulegroup2 | %{Enable-Rule -RuleName $_.Name -Yes}
