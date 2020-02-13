@@ -228,7 +228,8 @@ class InstallInTrust
 
 		$output = Invoke-Command -ScriptBlock { 
 			param($instpsmpath,$instparpsmpath,$admpass,$sqlsrv,$creds,$cmsourcepath,$_SP)
-			
+			Import-Module $instpsmpath
+			Import-Module $instparpsmpath
 			function List-Rules
 			{
 				param
@@ -269,8 +270,7 @@ class InstallInTrust
 				
 			}
 			
-		    Import-Module $instpsmpath
-			Import-Module $instparpsmpath
+
 			$cmd="Initialize-EnvironmentVariables -commonPsw $admpass -sqlServer $sqlsrv -sqlReportServer $sqlsrv -serviceAccount $creds"
 			Initialize-EnvironmentVariables -commonPsw $admpass -sqlServer $sqlsrv -sqlReportServer $sqlsrv -serviceAccount $creds
 			$StatusPath = "$cmsourcepath\Installcmd.txt"
