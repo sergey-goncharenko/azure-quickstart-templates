@@ -228,6 +228,47 @@ class InstallInTrust
 
 		$output = Invoke-Command -ScriptBlock { 
 			param($instpsmpath,$instparpsmpath,$admpass,$sqlsrv,$creds,$cmsourcepath,$_SP)
+			
+			function List-Rules
+			{
+				param
+				(
+				   
+					[Quest.InTrust.ConfigurationBrowser.InTrustObject]
+					$Group
+				)
+
+								$cfgBrowserDll = gci ${env:ProgramFiles(x86)} -Filter Quest.InTrust.ConfigurationBrowser.dll -Recurse -ErrorAction Ignore
+
+								[Reflection.Assembly]::LoadFrom($cfgBrowserDll.FullName) | Out-Null
+
+								$cfgBrowser = New-Object Quest.InTrust.ConfigurationBrowser.InTrustConfigurationBrowser($false)
+
+								$cfgBrowser.ConnectLocal()
+
+
+
+				if($Group -eq $null)
+				{
+					$parentGroup = $cfgBrowser.Configuration.Children["ITRTProcessingRuleGroups"]
+				}
+				else
+				{
+					$parentGroup = $Group
+				}
+
+				foreach($rule in $parentGroup.Properties["Rules"].Value)
+				{
+						$rule
+				}
+
+				foreach($child in $parentGroup.Children) 
+				{
+					List-Rules -Group $child
+				}
+				
+			}
+			
 		    Import-Module $instpsmpath
 			Import-Module $instparpsmpath
 			$cmd="Initialize-EnvironmentVariables -commonPsw $admpass -sqlServer $sqlsrv -sqlReportServer $sqlsrv -serviceAccount $creds"
@@ -251,7 +292,8 @@ class InstallInTrust
 			#$cmd="Start-Process -Filepath ($_SP\NotifyThroughEventLog.exe) -ArgumentList (' -v') -wait"
 			#$StatusPath = "$cmsourcepath\Installcmd.txt"
 			#$cmd >> $StatusPath
-			#Start-Process -Filepath ("$_SP\NotifyThroughEventLog.exe") -ArgumentList (' -v') -wait
+			cd $_SP
+			echo "yes" | .\NotifyThroughEventLog.exe #Start-Process -Filepath ("$_SP\NotifyThroughEventLog.exe") -ArgumentList (' -v') -wait
 			
 			$cmd="Install-InTrustLicense -LicenseFullName $cmsourcepath\License.asc"
 			Install-InTrustLicense -LicenseFullName "$cmsourcepath\License.asc"
@@ -300,8 +342,12 @@ class InstallInTrust
 
 						$notification.Update()
 					}
+					$rulegroup1=$cfgBrowser.Configuration.Children["ITRTProcessingRuleGroups"].Children | ?{$_.Name -like "Windows*"}
+					$rulegroup2=($cfgBrowser.Configuration.Children["ITRTProcessingRuleGroups"].Children | ?{$_.Name -like "Advanced*"}).Children | ?{$_.Name -like "Windows*"}
+
 					Enable-Policy -PolicyName "Windows/AD Security: full" -Yes
-					Enable-Rule -RuleName "Suspicious process was started (Security log on Windows 10 / Windows Server 2016 and later)" -Yes
+					List-Rules -Group $rulegroup1 | %{Enable-Rule -RuleName $_.Name -Yes}
+					List-Rules -Group $rulegroup2 | %{Enable-Rule -RuleName $_.Name -Yes}
 		} -ArgumentList $instpsmpath,$instparpsmpath,$admpass,$sqlsrv,$creds,$cmsourcepath,$_SP -ComputerName localhost -authentication credssp -Credential $PScreds -ConfigurationName microsoft.powershell32 -Verbose
         Write-output $output
 
