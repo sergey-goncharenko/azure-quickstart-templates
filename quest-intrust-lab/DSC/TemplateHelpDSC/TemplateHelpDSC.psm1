@@ -225,6 +225,11 @@ class InstallInTrust
         $cmpath = "c:\$_CM.exe"
         $cmsourcepath = "c:\$_CM"
 		$creds=$usernm
+			Import-Module $instpsmpath
+			Import-Module $instparpsmpath
+								$cfgBrowserDll = gci ${env:ProgramFiles(x86)} -Filter Quest.InTrust.ConfigurationBrowser.dll -Recurse -ErrorAction Ignore
+
+								[Reflection.Assembly]::LoadFrom($cfgBrowserDll.FullName) | Out-Null
 
 		$output = Invoke-Command -ScriptBlock { 
 			param($instpsmpath,$instparpsmpath,$admpass,$sqlsrv,$creds,$cmsourcepath,$_SP)
