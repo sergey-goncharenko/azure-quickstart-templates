@@ -28,7 +28,7 @@
 
     Import-DscResource -ModuleName TemplateHelpDSC
 	Import-DscResource -ModuleName xCredSSP
-	Import-DscResource -ModuleName IntrHelpers
+	#Import-DscResource -ModuleName IntrHelpers
 	
     $LogFolder = "TempLog"
 	$CM = "IntrFull"

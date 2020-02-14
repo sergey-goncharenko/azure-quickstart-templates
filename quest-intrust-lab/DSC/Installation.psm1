@@ -725,45 +725,45 @@ function Add-SiteToPolicy
     return $_SiteInPolicy
 }
 
-			function List-Rules
-			{
-				param
-				(
-				   
-					[Quest.InTrust.ConfigurationBrowser.InTrustObject]
-					$Group
-				)
+function List-Rules
+{
+	param
+	(
+	   
+		[Quest.InTrust.ConfigurationBrowser.InTrustObject]
+		$Group
+	)
 
-								$cfgBrowserDll = gci ${env:ProgramFiles(x86)} -Filter Quest.InTrust.ConfigurationBrowser.dll -Recurse -ErrorAction Ignore
+					$cfgBrowserDll = gci ${env:ProgramFiles(x86)} -Filter Quest.InTrust.ConfigurationBrowser.dll -Recurse -ErrorAction Ignore
 
-								[Reflection.Assembly]::LoadFrom($cfgBrowserDll.FullName) | Out-Null
+					[Reflection.Assembly]::LoadFrom($cfgBrowserDll.FullName) | Out-Null
 
-								$cfgBrowser = New-Object Quest.InTrust.ConfigurationBrowser.InTrustConfigurationBrowser($false)
+					$cfgBrowser = New-Object Quest.InTrust.ConfigurationBrowser.InTrustConfigurationBrowser($false)
 
-								$cfgBrowser.ConnectLocal()
+					$cfgBrowser.ConnectLocal()
 
 
 
-				if($Group -eq $null)
-				{
-					$parentGroup = $cfgBrowser.Configuration.Children["ITRTProcessingRuleGroups"]
-				}
-				else
-				{
-					$parentGroup = $Group
-				}
+	if($Group -eq $null)
+	{
+		$parentGroup = $cfgBrowser.Configuration.Children["ITRTProcessingRuleGroups"]
+	}
+	else
+	{
+		$parentGroup = $Group
+	}
 
-				foreach($rule in $parentGroup.Properties["Rules"].Value)
-				{
-						$rule
-				}
+	foreach($rule in $parentGroup.Properties["Rules"].Value)
+	{
+			$rule
+	}
 
-				foreach($child in $parentGroup.Children) 
-				{
-					List-Rules -Group $child
-				}
-				
-			}
+	foreach($child in $parentGroup.Children) 
+	{
+		List-Rules -Group $child
+	}
+	
+}
 
 Export-ModuleMember Install-VCRedist,
                     Install-SQLNativeClient,
