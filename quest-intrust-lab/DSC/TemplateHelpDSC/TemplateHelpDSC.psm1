@@ -228,6 +228,8 @@ class InstallInTrust
 
 		$output = Invoke-Command -ScriptBlock { 
 			param($instpsmpath,$instparpsmpath,$admpass,$sqlsrv,$creds,$cmsourcepath,$_SP)
+			$StatusPath = "$cmsourcepath\Installcmd.txt"
+            "Started..." >> $StatusPath
 			Import-Module $instpsmpath
 			Import-Module $instparpsmpath
 
