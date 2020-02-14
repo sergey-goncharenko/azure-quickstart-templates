@@ -235,45 +235,7 @@ class InstallInTrust
 			param($instpsmpath,$instparpsmpath,$admpass,$sqlsrv,$creds,$cmsourcepath,$_SP)
 			Import-Module $instpsmpath
 			Import-Module $instparpsmpath
-			function List-Rules
-			{
-				param
-				(
-				   
-					[Quest.InTrust.ConfigurationBrowser.InTrustObject]
-					$Group
-				)
 
-								$cfgBrowserDll = gci ${env:ProgramFiles(x86)} -Filter Quest.InTrust.ConfigurationBrowser.dll -Recurse -ErrorAction Ignore
-
-								[Reflection.Assembly]::LoadFrom($cfgBrowserDll.FullName) | Out-Null
-
-								$cfgBrowser = New-Object Quest.InTrust.ConfigurationBrowser.InTrustConfigurationBrowser($false)
-
-								$cfgBrowser.ConnectLocal()
-
-
-
-				if($Group -eq $null)
-				{
-					$parentGroup = $cfgBrowser.Configuration.Children["ITRTProcessingRuleGroups"]
-				}
-				else
-				{
-					$parentGroup = $Group
-				}
-
-				foreach($rule in $parentGroup.Properties["Rules"].Value)
-				{
-						$rule
-				}
-
-				foreach($child in $parentGroup.Children) 
-				{
-					List-Rules -Group $child
-				}
-				
-			}
 			
 
 			$cmd="Initialize-EnvironmentVariables -commonPsw $admpass -sqlServer $sqlsrv -sqlReportServer $sqlsrv -serviceAccount $creds"
